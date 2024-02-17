@@ -1,5 +1,5 @@
 import flask
-from flask import Flask,render_template,url_for,request
+from flask import Flask, render_template, url_for, request
 import pickle
 import base64
 import json
@@ -9,6 +9,7 @@ import re
 import io
 import tensorflow as tf
 import cv2
+import random
 
 
 labels = ['aircraft carrier',
@@ -370,10 +371,14 @@ init_Base64 = 21;
 #Initializing new Flask instance. Find the html template in "templates".
 app = flask.Flask(__name__, template_folder='templates')
 
+idx = 0
+
 #First route : Render the initial drawing template
 @app.route('/')
 def home():
-	return render_template('draw.html')
+	global idx
+	idx = random.choice(range(0,len(labels)))
+	return render_template('draw.html',object=labels[idx])
 
 
 
@@ -381,22 +386,27 @@ def home():
 # Second route : Use our model to make prediction - render the results page.
 @app.route('/predict', methods=['POST'])
 def predict():
+        global idx
+        print(labels[idx])
         draw = request.form['url']
-        #Removing the useless part of the url.
+        # Removing the useless part of the url.
         draw = draw[init_Base64:]
-        #Decoding
+        # Decoding
         draw_decoded = base64.b64decode(draw)
         image = np.asarray(bytearray(draw_decoded), dtype="uint8")
         image = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE)
         print(image.shape) 
-        #Resizing and reshaping to keep the ratio.
+        # Resizing and reshaping to keep the ratio.
         resized = cv2.resize(image, (28,28), interpolation = cv2.INTER_AREA)
         vect = np.asarray(resized, dtype="uint8")
         img = vect.reshape(1, 28, 28, 1).astype('float32')
         out = model.predict(img)
-        label = labels[int(out[0].argmax())]
-	
-        return render_template('results.html', prediction=label)
+        # label = labels[int(out[0].argmax())]
+        score = out[0][idx]
+        scale_value = lambda value: value * 9 + 1
+        score = scale_value(score)
+        score_rounded = round(score,2)
+        return render_template('results.html', score=score_rounded)
 
 
 if __name__ == '__main__':

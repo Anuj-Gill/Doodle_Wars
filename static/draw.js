@@ -4,7 +4,7 @@ var clickX = [];
 var clickY = [];
 var clickDrag = [];
 var paint = false;
-var curColor = "#FF5733";
+var curColor = "#000000";
 
 /**
     - Preparing the Canvas : Basic functions
@@ -59,7 +59,7 @@ function redraw() {
     context.clearRect(0, 0, canvas.width, canvas.height); // Clears the canvas
     context.strokeStyle = curColor;
     context.lineJoin = "round";
-    context.lineWidth = 3;
+    context.lineWidth = 2;
     for (var i = 0; i < clickX.length; i++) {
         context.beginPath();
         if (clickDrag[i] && i) {
