@@ -351,6 +351,7 @@ export function WhiteBoard() {
   const [coordinates, setCoordinates] = useState([]);
   const [object, setObject] = useState("");
   const [objId, setObjId] = useState("");
+  const [result,setResult] = useState(false)
   let isDragging = false;
   let lastX, lastY;
   
@@ -372,17 +373,20 @@ export function WhiteBoard() {
 
   const handleMouseDown = (e) => {
     isDragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    lastX = e.clientX - rect.left;
+    lastY = e.clientY - rect.top;
   };
 
   const handleMouseMove = (e) => {
     if (isDragging) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
 
-      const currentX = e.clientX;
-      const currentY = e.clientY;
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
 
       ctx.beginPath();
       ctx.strokeStyle = 'red';
@@ -394,9 +398,9 @@ export function WhiteBoard() {
       lastX = currentX;
       lastY = currentY;
 
-      setCoordinates((prevCoordinates) => [
-        ...prevCoordinates, [currentX,currentY],
-      ]);
+      // setCoordinates((prevCoordinates) => [
+      //   ...prevCoordinates, [currentX,currentY],
+      // ]);
     }
   };
 
@@ -405,11 +409,10 @@ export function WhiteBoard() {
   };
 
   const handleClear = () => {
-    console.log(coordinates)
+    setResult(false)
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0,0,canvas.width, canvas.height)
+    ctx.clearRect(0,0,canvas.width, canvas.height);
   }
 
   const handleSubmit = () => {
@@ -427,7 +430,7 @@ export function WhiteBoard() {
           body: JSON.stringify({url: canvas.toDataURL(), choice: objId}),
         });
         const res = await req.json();
-        console.log(res)
+        setResult(res.score)
     }
     handleFetch()
   }
@@ -440,26 +443,30 @@ export function WhiteBoard() {
       setObjId(objId)
       setObject(label)
       console.log(label);
-    
-
   },[])
 
 
 
   return (
-    <div>
+    <div className='flex flex-col justify-center items-center'>
+      <div className='p-4'>You have to draw a {object}</div>
       <canvas
         ref={canvasRef}
         id="canvas"
-        className="border-2 border-black border-solid bg-white"
+        className="border-2 border-black border-solid bg-white mb-5"
         height={100}
         width={100}
         ></canvas>
-      <div>
-        <div>You have to draw a {object}</div>
-        <button className='bg-white mr-10 p-1' onClick={() => handleClear()}>Clear</button>
-        <button className='bg-white p-1' onClick={() => handleSubmit()}>Submit</button>
+      <div className='flex flex-col mb-5'>
+        <div className='flex justify-end'>
+          <button className='bg-white mr-10 p-1' onClick={() => handleClear()}>Clear</button>
+          <button className='bg-white p-1' onClick={() => handleSubmit()}>Submit</button>
+        </div>
       </div>
+      {result && 
+      <div>
+        Score: {result}  
+      </div>}
     </div>
   );
 }
