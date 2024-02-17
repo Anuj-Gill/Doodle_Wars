@@ -64,6 +64,14 @@ export function WhiteBoard() {
     ctx.clearRect(0,0,canvas.width, canvas.height)
   }
 
+  const handleSubmit = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d')
+    console.log(canvas.toDataURL())
+  }
+
+
+
   return (
     <div>
       <canvas
@@ -75,7 +83,7 @@ export function WhiteBoard() {
       ></canvas>
       <div>
         <button className='bg-white mr-10 p-1' onClick={() => handleClear()}>Clear</button>
-        <button className='bg-white p-1'>Submit</button>
+        <button className='bg-white p-1' onClick={() => handleSubmit()}>Submit</button>
       </div>
     </div>
   );
