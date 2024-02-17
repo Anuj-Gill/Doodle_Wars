@@ -383,31 +383,53 @@ def home():
 
 
 
-# Second route : Use our model to make prediction - render the results page.
+from flask import Flask, request, render_template, jsonify
+import numpy as np
+import cv2
+import base64
+
+from flask_cors import CORS
+app = Flask(__name__)
+CORS(app)
+
+
+# Assuming you have defined `model` and `labels` somewhere in your code.
+
 @app.route('/predict', methods=['POST'])
 def predict():
-        global idx
-        print(labels[idx])
-        draw = request.form['url']
-        # Removing the useless part of the url.
-        draw = draw[init_Base64:]
-        # Decoding
-        draw_decoded = base64.b64decode(draw)
-        image = np.asarray(bytearray(draw_decoded), dtype="uint8")
-        image = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE)
-        print(image.shape) 
-        # Resizing and reshaping to keep the ratio.
-        resized = cv2.resize(image, (28,28), interpolation = cv2.INTER_AREA)
-        vect = np.asarray(resized, dtype="uint8")
-        img = vect.reshape(1, 28, 28, 1).astype('float32')
-        out = model.predict(img)
-        # label = labels[int(out[0].argmax())]
-        score = out[0][idx]
-        scale_value = lambda value: value * 9 + 1
-        score = scale_value(score)
-        score_rounded = round(score,2)
-        return render_template('results.html', score=score_rounded)
+    # Accessing data from the request body
 
+    data = request.get_json()
+    print(data)
+    draw = data['url']
+    choice = data['choice']    
+
+#     print(choice)
+    idx = choice
+#     print(idx)
+    
+    # Removing the useless part of the url.
+    draw = draw[init_Base64:]
+    # Decoding
+    draw_decoded = base64.b64decode(draw)
+    image = np.asarray(bytearray(draw_decoded), dtype="uint8")
+    image = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE)
+    
+    resized = cv2.resize(image, (28, 28), interpolation=cv2.INTER_AREA)
+
+    vect = np.asarray(resized, dtype="uint8")  # Change values greater than 0 to 255
+
+    img = vect.reshape(1, 28, 28, 1).astype('float32')
+    out = model.predict(img)
+    # label = labels[int(out[0].argmax())]
+    score = out[0][idx]
+    scale_value = lambda value: value * 10
+    score = scale_value(score)
+
+    # Return JSON response
+    return jsonify({'score':score})
+    
 
 if __name__ == '__main__':
-	app.run()
+    app.run(debug=True)
+
