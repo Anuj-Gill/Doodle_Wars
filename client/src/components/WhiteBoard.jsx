@@ -385,7 +385,7 @@ export function WhiteBoard() {
       const currentY = e.clientY;
 
       ctx.beginPath();
-      ctx.strokeStyle = 'black';
+      ctx.strokeStyle = 'red';
       ctx.lineWidth = 2;
       ctx.moveTo(lastX, lastY);
       ctx.lineTo(currentX, currentY);
@@ -452,8 +452,8 @@ export function WhiteBoard() {
         ref={canvasRef}
         id="canvas"
         className="border-2 border-black border-solid bg-white"
-        height={200}
-        width={200}
+        height={100}
+        width={100}
         ></canvas>
       <div>
         <div>You have to draw a {object}</div>
