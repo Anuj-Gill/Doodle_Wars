@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const tf = require('@tensorflow/tfjs');
 const cv = require('@techstark/opencv-js');
 const base64Img = require('base64-img');
-const { createCanvas, Image } = require('canvas');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const _random = require('lodash.random');
@@ -380,62 +379,47 @@ app.get('/', (req, res) => {
   res.send('hii')
 });
 
+const sharp = require('sharp');
+
 app.post('/predict', async (req, res) => {
   try {
     const data = req.body;
     const draw = data.url;
     const choice = data.choice;
-    // console.log(draw)
-    
-    console.log('line 387');
-    // const model = await loadModel(); // Load model asynchronously
-     
-    
+
     let idx = choice;
-    
-    // Removing the useless part of the url.
-    const base64Data = draw.substring(22);
-    console.log(base64Data)
-    
-    // Convert base64 to image
-    const imagePath = `temp/${uuidv4()}.png`;
-    base64Img.img(base64Data, 'temp', uuidv4(), async (err, filepath) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error occurred while processing the image.' });
-        return;
-      }
-      console.log('line 402');
-      
-      // Read image using OpenCV
-      const imgData = fs.readFileSync(filepath);
-      const img = await cv.imdecodeAsync(new Uint8Array(imgData));
-      
-      const resized = img.resize(28, 28);
-      
-      // Convert image to tensor
-      const tensor = tf.tensor(resized.getData()).reshape([1, 28, 28, 1]).toFloat();
-      
-      // Normalize pixel values
-      const normalized = tensor.div(255.0);
-      
-      // Predict using the model
-      // const prediction = model.predict(normalized).arraySync()[0][idx];
-      const prediction = 1.0;
-      const scaledScore = 1 + prediction * 9; // Scale the score between 1 and 10
-      const roundedScore = Math.round(scaledScore);
-      console.log('line 420');
 
-      res.json({ score: roundedScore });
+    // Extract base64 data from the URL (assuming it starts with "data:image/png;base64,")
+    const base64Data = draw.replace(/^data:image\/\w+;base64,/, '');
 
-      // Remove temporary image file
-      fs.unlinkSync(filepath);
-    });
+    // Decode base64 data and process image using sharp
+    const buffer = Buffer.from(base64Data, 'base64');
+    const metadata = await sharp(buffer).metadata();
+    const image = await sharp(buffer)
+      .resize(metadata.width, metadata.height) // Resize if necessary
+      .raw() // Get raw pixel data
+      .toBuffer();
+
+    // Convert raw pixel data to tensor
+    const tensor = tf.tensor(image, [1, metadata.height, metadata.width, 4]).toFloat();
+
+    // Normalize pixel values
+    const normalized = tensor.div(255.0);
+
+    // Predict using the model
+    // const prediction = model.predict(normalized).arraySync()[0][idx];
+    const prediction = 1.0;
+    const scaledScore = 1 + prediction * 9; // Scale the score between 1 and 10
+    const roundedScore = Math.round(scaledScore);
+
+    res.json({ score: roundedScore });
   } catch (error) {
     console.error('Error occurred:', error);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

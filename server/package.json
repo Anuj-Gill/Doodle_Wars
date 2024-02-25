@@ -24,6 +24,7 @@
     "node-fetch-commonjs": "^3.3.2",
     "path": "^0.12.7",
     "random": "^4.1.0",
+    "sharp": "^0.33.2",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
