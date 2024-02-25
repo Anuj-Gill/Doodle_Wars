@@ -420,16 +420,17 @@ export function WhiteBoard() {
     const ctx = canvas.getContext('2d')
     console.log(canvas.toDataURL())
     const handleFetch = async () => {
+      console.log('req sent')
       const req = await fetch("http://localhost:5000/predict", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: localStorage.getItem('otqrAdminToken')
           },
           body: JSON.stringify({url: canvas.toDataURL(), choice: objId}),
         });
         const res = await req.json();
+        console.log('res recieved')
         setResult(res.score)
     }
     handleFetch()
