@@ -13,18 +13,20 @@
   "dependencies": {
     "@techstark/opencv-js": "^4.9.0-release.2",
     "@tensorflow/tfjs": "^4.17.0",
-    "base64-img": "^1.0.4",
+    "base64-img": "^1.0.1",
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
     "lodash.random": "^3.2.0",
     "node-fetch": "^3.3.2",
     "node-fetch-commonjs": "^3.3.2",
     "path": "^0.12.7",
     "random": "^4.1.0",
     "sharp": "^0.33.2",
+    "socket.io": "^4.7.4",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

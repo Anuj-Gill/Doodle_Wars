@@ -7,11 +7,27 @@ const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const _random = require('lodash.random');
 const cors = require('cors');
-const fetch = require('node-fetch-commonjs')
+const fetch = require('node-fetch-commonjs');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-app.use(cors());
+
+const http = require('http').Server(app);
+const PORT = 3000;
+
+app.use(cors())  
+const socketIO = require('socket.io')(http,{
+  cors : {
+    origin: 'http://localhost:5173'
+  }
+  })
+
+//Socket Logic
+socketIO.on('connection', (socket) => {
+  console.log(`New connection: ${socket.id}`);
+  socket.on('disconnect',() => {
+    console.log("a user dissonncted!!")
+  })
+})
 
 // Load model and labels
 async function loadModel() {
@@ -20,8 +36,6 @@ async function loadModel() {
   // const model = await tf.loadLayersModel('file:Doodle_Wars/server/model.json');
   return 7;
 }
-
-
 
 const labels = ['aircraft carrier',
 'airplane',
@@ -421,6 +435,4 @@ app.post('/predict', async (req, res) => {
 
 
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+http.listen(5000)
