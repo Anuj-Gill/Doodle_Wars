@@ -18,14 +18,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/play' element={<WhiteBoard />}  />
-        <Route path='/' element={<Home />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/joinroom' element={<JoinRoom />} />
-        <Route path='/createroom' element={<CreateRoom />} />
-        <Route path='/startgame' element={<StartGame />} />
-        <Route path='/wait' element={<Wait />} />
-        <Route path='/battlearena' element={<BattleArena />} />
+        <Route path='/' element={<Home socket={socket} />} />
+        <Route path='/home' element={<Home socket={socket}/>} />
+        <Route path='/joinroom' element={<JoinRoom socket={socket}/>} />
+        <Route path='/createroom' element={<CreateRoom socket={socket}/>} />
+        <Route path='/startgame' element={<StartGame socket={socket}/>} />
+        <Route path='/wait' element={<Wait socket={socket}/>} />
+        <Route path='/battlearena' element={<BattleArena socket={socket}/>} />
       </Routes>
 
     </BrowserRouter>

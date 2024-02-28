@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom"
 
-export function Home() {
+export function Home({ socket }) {
 
   const navigate = useNavigate(); 
-
-
+  
+  
 
     return(
         <div className="text-center ">
@@ -15,6 +15,7 @@ export function Home() {
               <button className="mr-6 p-2 bg-pink-300" onClick={() => navigate('/createroom')}>Create</button>
               <button className=" p-2 bg-pink-300" onClick={() => navigate('/joinroom')}>Join</button>
           </div>
+          <h2>Socket id : {socket.id}</h2>
         </div>
     )
 }
