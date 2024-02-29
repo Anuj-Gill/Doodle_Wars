@@ -27,7 +27,7 @@ export function StartGame({ socket }) {
         //     navigate('/battlearena');
             
         // });
-        navigate('/battlearena'); 
+        navigate('/battlearena');
     }
 
     // setInterval(() => {

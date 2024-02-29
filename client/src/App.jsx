@@ -8,6 +8,7 @@ import { CreateRoom } from './components/CreateRoom';
 import { StartGame } from './components/StartGame';
 import { Wait } from './components/Wait';
 import { BattleArena } from './components/BattleArena';
+import { Score } from './components/Score';
 import socketIO from 'socket.io-client';
 
 const socket = socketIO.connect("http://localhost:5000");
@@ -25,6 +26,8 @@ function App() {
         <Route path='/startgame' element={<StartGame socket={socket}/>} />
         <Route path='/wait' element={<Wait socket={socket}/>} />
         <Route path='/battlearena' element={<BattleArena socket={socket}/>} />
+        <Route path='/score' element={<Score socket={socket}/>} />
+        <Route path='/whiteboard' element={<WhiteBoard socket={socket}/>} />
       </Routes>
 
     </BrowserRouter>

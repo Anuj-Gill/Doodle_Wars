@@ -45,19 +45,22 @@ socketIO.on('connection', (socket) => {
   //Listen for newUser
   socket.on('newUser', (name, roomName) => {
 
-    console.log("line 47",name, roomName);
     if (roomName in data) {
-      socket.join(roomName)
-      data[roomName].push(name);
-      console.log('line 51', data);
-      socket.emit('newUserAccepted', `You joined the ${roomName} successfully!!`);
-
-      //To send players data
-      socket.to(roomName).emit('players-data', data[roomName]);
-      
+      if (data[roomName].includes(name) && data[roomName][0] === name) {
+        socket.join(roomName)
+        socket.emit('newUserAccepted', `Admin joined ${roomName} room successfully!!`, data[roomName]);
+      } else if (data[roomName].includes(name)) {
+        socket.emit('newUserDeclined', 'User name already taken! Join with another username.')
+      } else {
+        socket.join(roomName)
+        socket.emit('newUserAccepted', `You joined ${roomName} room successfully!!`, data[roomName]);
+        socket.to(roomName).emit('players-data', data[roomName]);
+        data[roomName].push(name);
+      }
     } else {
       socket.emit('newUserDeclined', 'Room does not exist!! Check the Room Code again.')
     }
+    socket.to(roomName).emit('players-data', data[roomName]);
   });
 
   //Starting the game
@@ -65,16 +68,20 @@ socketIO.on('connection', (socket) => {
     console.log(roomName, 'Recieved request to start the game')
     if (roomName in data) {
       console.log('Sending request to start game')
-      socket.to(roomName).emit('enterGame', 'you can enter the game');
+      socket.to(roomName).emit('enterGame', true);
     }
   })
 
   //Listen for user left
-  socket.on('userLeft',(name, roomName) => {
-    data[roomName].filter((user) => user === name);
+  socket.on('userLeft', (name, roomName) => {
+    try{
+      data[roomName].filter((user) => user === name);
+    } catch(error) {
+
+    }
   })
   console.log(data);
-  
+
 
 })
 

@@ -12,20 +12,25 @@ export function JoinRoom({ socket }) {
 
     function handleJoin(e) {
         e.preventDefault();
-        if(name === '' || roomName === ''){
+        const lname = localStorage.getItem('userName');
+        const lrname = localStorage.getItem('roomName');
+        if (name === '' || roomName === '') {
             setCreateStatus('Above fields can not be empty!');
-            
         }
-        else if(!localStorage.getItem('userName')) {
-            socket.emit('newUser',name, roomName);
-            socket.on('newUserDeclined',(message) => {
+        else if ( (lname === name && lrname === roomName) || (!localStorage.getItem('userName'))) {
+            socket.emit('newUser', name, roomName);
+            socket.on('newUserDeclined', (message) => {
                 setCreateStatus(message)
             })
-            socket.on('newUserAccepted',(message) => {
-                console.log(message);
-                localStorage.setItem("userName",name);
-                localStorage.setItem("roomName",roomName);
-                navigate('/wait');
+            socket.on('newUserAccepted', (message, data) => {
+                console.log(message, data);
+                localStorage.setItem("userName", name);
+                localStorage.setItem("roomName", roomName);
+                if (data[0] === localStorage.getItem('userName')) {
+                    navigate('/startgame')
+                } else {
+                    navigate('/wait');
+                }
             })
             // socket.on('players-data',(data) => {
             //     console.log(data)
@@ -35,12 +40,12 @@ export function JoinRoom({ socket }) {
 
             //     }
             // })
-        } 
+        }
         else {
             setCreateStatus('You are already in a room! Leave the current room and then try again.');
         }
     }
-    
+
 
     return (
         <div className="mt-28">
@@ -53,4 +58,4 @@ export function JoinRoom({ socket }) {
             {createStatus && <div>{createStatus}</div>}
         </div>
     )
-    }
+}

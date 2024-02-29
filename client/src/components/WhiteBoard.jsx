@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const labels = ['aircraft carrier',
  'airplane',
@@ -346,7 +347,8 @@ const labels = ['aircraft carrier',
  'zebra',
  'zigzag']
 
-export function WhiteBoard() {
+export function WhiteBoard({state, socket}) {
+  const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
   const [object, setObject] = useState("");
@@ -431,9 +433,18 @@ export function WhiteBoard() {
         });
         const res = await req.json();
         console.log('res recieved')
-        setResult(res.score)
-    }
+        setResult(res.score);
+        localStorage.setItem('score',result);
+      }
+      const room = localStorage.getItem('roomName');
+      console.log(room)
+      socket.emit('scores',localStorage.getItem('userName'),localStorage.getItem('score'));
+      navigate('/score')
     handleFetch()
+  }
+
+  if(state) {
+    handleSubmit();
   }
 
   
@@ -461,13 +472,8 @@ export function WhiteBoard() {
       <div className='flex flex-col mb-5'>
         <div className='flex justify-end'>
           <button className='bg-white mr-10 p-1' onClick={() => handleClear()}>Clear</button>
-          <button className='bg-white p-1' onClick={() => handleSubmit()}>Submit</button>
         </div>
       </div>
-      {result && 
-      <div>
-        Score: {result}  
-      </div>}
     </div>
   );
 }

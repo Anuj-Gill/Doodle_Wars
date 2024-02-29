@@ -12,10 +12,11 @@ export function CreateRoom({socket}) {
 
     function handleCreate(e) {
         e.preventDefault();
+        
         if(name === '' || roomName === ''){
             setCreateStatus('Above fields can not be empty!')
         }
-        else if(!localStorage.getItem('userName')) {
+        else if( (!localStorage.getItem('userName'))) {
             localStorage.setItem("userName",name);
             localStorage.setItem("roomName",roomName);
             socket.emit('newRoom',name, roomName);

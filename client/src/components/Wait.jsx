@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Wait({ socket }) {
@@ -8,10 +8,11 @@ export function Wait({ socket }) {
 
     socket.on('enterGame', (message) => {
         console.log('got the message in waiting',message)
-        setStartStatus(message);
-        navigate('/battlearena');
-        
+        if(message) {
+            navigate('/battlearena');    
+        }
     });
+
 
     return(
         <div>
