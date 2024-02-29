@@ -2,21 +2,18 @@ import { useState } from "react"
 
 
 export function Score({socket}) {
-    const [usersScore, setUsersScore] = useState([]);
-    socket.on('scores',(userName, points) => {
-        const finalScore = `${userName}: ${points}`
-        setUsersScore(...usersScore, finalScore);
-        console.log();
-    })
+    // const [usersScore, setUsersScore] = useState([]);
+    
 
-    console.log(usersScore);
+    // console.log(usersScore);
     return(
         <div>
-            {usersScore.map((p, i) => {
+            {/* {usersScore.map((p, i) => {
                 return(
                     <div key={i}>{p}</div>
                 )
-            })}
+            })} */}
+            score page
         </div>
     )
 }

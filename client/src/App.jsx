@@ -27,7 +27,6 @@ function App() {
         <Route path='/wait' element={<Wait socket={socket}/>} />
         <Route path='/battlearena' element={<BattleArena socket={socket}/>} />
         <Route path='/score' element={<Score socket={socket}/>} />
-        <Route path='/whiteboard' element={<WhiteBoard socket={socket}/>} />
       </Routes>
 
     </BrowserRouter>

@@ -27,6 +27,7 @@ export function StartGame({ socket }) {
         //     navigate('/battlearena');
             
         // });
+        socket.emit('generateObjId',localStorage.getItem('roomName'));
         navigate('/battlearena');
     }
 

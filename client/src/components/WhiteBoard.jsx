@@ -347,7 +347,7 @@ const labels = ['aircraft carrier',
  'zebra',
  'zigzag']
 
-export function WhiteBoard({state, socket}) {
+export function WhiteBoard({state }) {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
   const [coordinates, setCoordinates] = useState([]);
@@ -434,12 +434,8 @@ export function WhiteBoard({state, socket}) {
         const res = await req.json();
         console.log('res recieved')
         setResult(res.score);
-        localStorage.setItem('score',result);
+        localStorage.setItem('score',result); 
       }
-      const room = localStorage.getItem('roomName');
-      console.log(room)
-      socket.emit('scores',localStorage.getItem('userName'),localStorage.getItem('score'));
-      navigate('/score')
     handleFetch()
   }
 
@@ -474,6 +470,9 @@ export function WhiteBoard({state, socket}) {
           <button className='bg-white mr-10 p-1' onClick={() => handleClear()}>Clear</button>
         </div>
       </div>
+      {result && 
+      <div>Score: {result}</div>
+      }
     </div>
   );
 }
