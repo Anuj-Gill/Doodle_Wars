@@ -20,6 +20,7 @@ const socketIO = require('socket.io')(http, {
 })
 
 //Socket Logic
+
 socketIO.on('connection', (socket) => {
   console.log(`New connection: ${socket.id}`);
   socket.on('disconnect', () => {
@@ -33,8 +34,8 @@ socketIO.on('connection', (socket) => {
     if (roomName in data) {
       socket.to(roomName).emit('newRoomDeclined', "Room with this name already exists! Use another name")
     } else {
-      data[roomName] = [[name]];
       socket.join(roomName)
+      data[roomName] = [[name]];
       console.log(data)
       socket.to(roomName).emit('players-data', data[roomName]);
       socket.emit('newRoomAccepted', 'Room created successfully!!');
@@ -44,29 +45,30 @@ socketIO.on('connection', (socket) => {
 
   //Listen for newUser
   socket.on('newUser', (name, roomName) => {
-    try{
+    try {
       if (roomName in data) {
-          if (data[roomName][0].includes(name)) {
-              if (data[roomName][0][0] === name) {
-                  socket.join(roomName);
-                  socket.emit('newUserAccepted', `Admin joined ${roomName} room successfully!!`, data[roomName][0]);
-              } else {
-                  socket.emit('newUserDeclined', 'User name already taken! Join with another username.');
-              }
+        if (data[roomName][0].includes(name)) {
+          if (data[roomName][0][0] === name) {
+            socket.join(roomName);
+            socket.emit('newUserAccepted', `Admin joined ${roomName} room successfully!!`, data[roomName][0]);
           } else {
-              socket.join(roomName);
-              data[roomName][0].push(name);
-              socket.emit('newUserAccepted', `You joined ${roomName} room successfully!!`, data[roomName][0]);
-              socket.to(roomName).emit('players-data', data[roomName][0]);
+            socket.emit('newUserDeclined', 'User name already taken! Join with another username.');
           }
+        } else {
+          socket.join(roomName);
+          data[roomName][0].push(name);
+          socket.emit('newUserAccepted', `You joined ${roomName} room successfully!!`, data[roomName][0]);
+          socket.to(roomName).emit('players-data', data[roomName][0]);
+        }
       } else {
-          socket.emit('newUserDeclined', 'Room does not exist!! Check the Room Code again.');
+        socket.emit('newUserDeclined', 'Room does not exist!! Check the Room Code again.');
       }
       console.log(data)
       socket.to(roomName).emit('players-data', data[roomName][0]);
-    } catch(error) {
-      console.log(error)}
-});
+    } catch (error) {
+      console.log(error)
+    }
+  });
 
   //Starting the game
   socket.on('startGame', (roomName) => {
@@ -79,9 +81,9 @@ socketIO.on('connection', (socket) => {
 
   //Listen for user left
   socket.on('userLeft', (name, roomName) => {
-    try{
+    try {
       data[roomName][0].filter((user) => user === name);
-    } catch(error) {
+    } catch (error) {
 
     }
   })
@@ -94,16 +96,23 @@ socketIO.on('connection', (socket) => {
     const objId = Math.floor(Math.random() * max);
     console.log(roomName, 'line 88', objId);
     if (roomName in data) {
-        data[roomName][1] = objId;
-        console.log(data, 'line 93');
+      data[roomName][1] = objId;
+      console.log(data, 'line 93');
+
     }
-});
-
-socket.on('requestObjId', (roomName) => {
-  socket.to(roomName).emit('sendingObjId', data[roomName][1]);
-});
+  });
 
 
+  socket.on('requestObjId', (roomName) => {
+    if (roomName in data) {
+      socketIO.in(roomName).emit('sendingObjId', data[roomName][1]);
+      console.log(data[roomName][1], 'line 104');
+    }
+    else {
+      console.log('Join a room first!!')
+      console.log('Error sending obj id');
+    }
+  });
 })
 
 
