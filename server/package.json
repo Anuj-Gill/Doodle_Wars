@@ -11,8 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@techstark/opencv-js": "^4.9.0-release.2",
-    "@tensorflow/tfjs": "^4.17.0",
     "base64-img": "^1.0.1",
     "body-parser": "^1.20.2",
     "canvas": "^2.11.2",

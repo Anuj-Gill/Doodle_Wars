@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const app = express();
-const predictRouter = require('./routes/predict')
+// const predictRouter = require('./routes/predict')
 
 const http = require('http').Server(app);
 dotenv.config();
@@ -92,7 +92,7 @@ socketIO.on('connection', (socket) => {
 
   //Listen for object Id request
   socket.on('generateObjId', (roomName) => {
-    const max = 200;
+    const max = 25;
     const objId = Math.floor(Math.random() * max);
     console.log(roomName, 'line 88', objId);
     if (roomName in data) {
@@ -125,8 +125,8 @@ app.get('/', (req, res) => {
   res.send('hii')
 });
 
-app.use('/', predictRouter);
+// app.use('/', predictRouter);
 
 
 
-http.listen(process.env.PORT)
+http.listen(4000)

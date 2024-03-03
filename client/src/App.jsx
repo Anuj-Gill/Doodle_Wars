@@ -11,7 +11,7 @@ import { BattleArena } from './components/BattleArena';
 import { Score } from './components/Score';
 import socketIO from 'socket.io-client';
 
-const socket = socketIO.connect("http://localhost:5000");
+const socket = socketIO.connect("http://localhost:4000");
 
 function App() {
   const [count, setCount] = useState(0)
