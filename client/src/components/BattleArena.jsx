@@ -384,15 +384,16 @@ export function BattleArena({ socket }) {
         const ctx = canvas.getContext('2d');
         console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('http://localhost:5000/predict', {
+            const req = await fetch('https://cb24-2409-4081-2c13-e7fc-a479-c22-2e32-663b.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json'
                 },
-                body: JSON.stringify({ url: canvas.toDataURL(), choice: objId })
+                body: JSON.stringify({ img: canvas.toDataURL(), object_idx: objId })
             });
             const res = await req.json();
+            console.log(res)
             setResult(res.score);
             localStorage.setItem('score', result);
         };
