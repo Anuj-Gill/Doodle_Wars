@@ -50,6 +50,7 @@ export function JoinRoom({ socket }) {
         e.preventDefault();
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
+        localStorage.removeItem('score');
         navigate('/')
     }
 

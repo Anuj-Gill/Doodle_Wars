@@ -9,6 +9,7 @@ const http = require('http').Server(app);
 dotenv.config();
 
 let data = {};
+let scores = {};
 console.log(data)
 
 
@@ -72,10 +73,10 @@ socketIO.on('connection', (socket) => {
 
 
 
-  socket.on('req-players-data',(roomName) => {
-    if(roomName in data) {
+  socket.on('req-players-data', (roomName) => {
+    if (roomName in data) {
       socketIO.in(roomName).emit('players-data', data[roomName][0]);
-    } 
+    }
   })
 
   //Starting the game
@@ -121,6 +122,48 @@ socketIO.on('connection', (socket) => {
       console.log('Error sending obj id');
     }
   });
+
+  
+
+  //scores
+  socket.on('userScore', (user, roomName, score) => {
+    // console.log(user);
+
+    if (!(roomName in scores)) {
+        // If not present, initialize it with an empty object
+        scores[roomName] = {};
+    }
+    // Assign the score to the user in the respective room
+    scores[roomName][user] = score;
+    console.log(scores);
+
+    // Calculate the highest score and corresponding username
+    let highestScore = 0;
+    let highestScorer = '';
+    for (let username in scores[roomName]) {
+        if (scores[roomName][username] > highestScore) {
+            highestScore = scores[roomName][username];
+            highestScorer = username;
+        }
+    }
+    if (highestScorer !== '') {
+        console.log(highestScorer);
+        // Save the highest scorer in the scores object under the roomName
+        scores[roomName]['highestScorer'] = highestScorer;
+        console.log('winner name saved:', scores[roomName][highestScorer]);
+    }
+    
+  });
+
+  socket.on('getWinnerName', (roomName) => {
+    try{
+      console.log('winner name sent!!', scores, scores[roomName]['highestScorer'])
+      socketIO.in(roomName).emit('winnerName', scores[roomName]['highestScorer'])
+    } catch(error) {
+      console.log(error)
+    }
+  })
+
 })
 
 

@@ -36,6 +36,7 @@ export function CreateRoom({socket}) {
         e.preventDefault();
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
+        localStorage.removeItem('score');
         navigate('/')
     }
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 export function StartGame({ socket }) {
 
     const navigate = useNavigate();
-    const [players, setPlayers] = useState([])
+    const [players, setPlayers] = useState([]);
     
 
     const name = localStorage.getItem('userName');

@@ -29,14 +29,16 @@ const labels = ['airplane',
 
 export function BattleArena({ socket }) {
     const navigate = useNavigate();
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(15);
     const [submitState, setSubmitState] = useState(false);
-    const [result, setResult] = useState(false);
+    const [result, setResult] = useState(0);
     const canvasRef = useRef(null);
     const [coordinates, setCoordinates] = useState([]);
     const [objectName, setObjectName] = useState('');
     const [objId, setObjId] = useState(0);
     const [roomCode, setRoomCode] = useState(localStorage.getItem('roomName'));
+    const [winner, setWinner] = useState('');
+    const [players, setPlayers] = useState([])
     let isDragging = false;
     let lastX, lastY;
 
@@ -47,6 +49,7 @@ export function BattleArena({ socket }) {
         e.preventDefault();
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
+        localStorage.removeItem('score');
         navigate('/');
     }
 
@@ -64,7 +67,7 @@ export function BattleArena({ socket }) {
         const ctx = canvas.getContext('2d');
         console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://cb24-2409-4081-2c13-e7fc-a479-c22-2e32-663b.ngrok-free.app/predict', {
+            const req = await fetch('https://bbc8-2409-4081-1e1b-aefe-9197-cb5d-6506-5fa0.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,10 +78,23 @@ export function BattleArena({ socket }) {
             const res = await req.json();
             console.log(res)
             setResult(res.score);
-            localStorage.setItem('score', result);
+            localStorage.setItem('score', res.score);
+            socket.emit('userScore',localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
+            setTimeout(() => {
+                socket.emit('getWinnerName', localStorage.getItem('roomName')); 
+            }, 1000);
+            
         };
         handleFetch();
     };
+    
+
+    socket.on('winnerName', winnerName => {
+        setWinner(winnerName);
+        console.log(winner)
+    })
+
+    
 
     // Effect to initialize the canvas and set event listeners
     useEffect(() => {
@@ -184,23 +200,33 @@ export function BattleArena({ socket }) {
             <h2>Room Code: {roomCode}</h2>
             <button onClick={handleExit}>Leave Room</button>
             <div className='flex flex-col justify-center items-center'>
-                <div className='p-4'>You have to draw a {objectName}</div>
-                <canvas
-                    ref={canvasRef}
-                    id='canvas'
-                    className='border-2 border-black border-solid bg-white mb-5'
-                    height={100}
-                    width={100}></canvas>
-                <div className='flex flex-col mb-5'>
-                    <div className='flex justify-end'>
-                        <button className='bg-white mr-10 p-1' onClick={handleClear}>
-                            Clear
-                        </button>
+                {winner ? (
+                    <div>
+                        <h3>Winner: {winner}</h3>
+                        <h3>Score: {result}</h3>
                     </div>
-                </div>
-                {result && <div>Score: {result}</div>}
-                <div>Timer: {timer} seconds</div>
+                ) : (
+                    <div>
+                        <div className='p-4'>You have to draw a {objectName}</div>
+                        <canvas
+                            ref={canvasRef}
+                            id='canvas'
+                            className='border-2 border-black border-solid bg-white mb-5'
+                            height={100}
+                            width={100}></canvas>
+                        <div className='flex flex-col mb-5'>
+                            <div className='flex justify-end'>
+                                <button className='bg-white mr-10 p-1' onClick={handleClear}>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                        {result && <div>Score: {result}</div>}
+                        <div>Timer: {timer} seconds</div>
+                    </div>
+                )}
             </div>
         </div>
     );
+    
 }
