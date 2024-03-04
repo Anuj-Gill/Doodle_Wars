@@ -127,7 +127,8 @@ socketIO.on('connection', (socket) => {
 
   //scores
   socket.on('userScore', (user, roomName, score) => {
-    // console.log(user);
+
+    console.log('got a request from',user,'and room', roomName);
 
     if (!(roomName in scores)) {
         // If not present, initialize it with an empty object
@@ -140,18 +141,20 @@ socketIO.on('connection', (socket) => {
     // Calculate the highest score and corresponding username
     let highestScore = 0;
     let highestScorer = '';
-    for (let username in scores[roomName]) {
-        if (scores[roomName][username] > highestScore) {
-            highestScore = scores[roomName][username];
-            highestScorer = username;
-        }
-    }
-    if (highestScorer !== '') {
-        console.log(highestScorer);
-        // Save the highest scorer in the scores object under the roomName
-        scores[roomName]['highestScorer'] = highestScorer;
-        console.log('winner name saved:', scores[roomName][highestScorer]);
-    }
+    console.log(data[roomName][0].length, Object.keys(scores[roomName]).length)
+    if(data[roomName][0].length ===Object.keys(scores[roomName]).length)
+      for (let username in scores[roomName]) {
+          if (scores[roomName][username] > highestScore) {
+              highestScore = scores[roomName][username];
+              highestScorer = username;
+          }
+      }   
+      if (highestScorer !== '') {
+          // Save the highest scorer in the scores object under the roomName
+          scores[roomName]['highestScorer'] = highestScorer;
+          console.log('winner name saved:', scores[roomName]['highestScorer']);
+      }
+
     
   });
 
