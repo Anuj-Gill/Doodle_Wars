@@ -37,8 +37,8 @@ socketIO.on('connection', (socket) => {
       socket.join(roomName)
       data[roomName] = [[name]];
       console.log(data)
-      socket.to(roomName).emit('players-data', data[roomName]);
-      socket.emit('newRoomAccepted', 'Room created successfully!!');
+      socketIO.in(roomName).emit('players-data', data[roomName]);
+      socket.emit('newRoomAccepted', 'Room created successfully!!', data[roomName][0]);
     }
   });
 
@@ -58,7 +58,7 @@ socketIO.on('connection', (socket) => {
           socket.join(roomName);
           data[roomName][0].push(name);
           socket.emit('newUserAccepted', `You joined ${roomName} room successfully!!`, data[roomName][0]);
-          socket.to(roomName).emit('players-data', data[roomName][0]);
+          socketIO.in(roomName).emit('players-data', data[roomName][0]);
         }
       } else {
         socket.emit('newUserDeclined', 'Room does not exist!! Check the Room Code again.');
@@ -69,6 +69,14 @@ socketIO.on('connection', (socket) => {
       console.log(error)
     }
   });
+
+
+
+  socket.on('req-players-data',(roomName) => {
+    if(roomName in data) {
+      socketIO.in(roomName).emit('players-data', data[roomName][0]);
+    } 
+  })
 
   //Starting the game
   socket.on('startGame', (roomName) => {

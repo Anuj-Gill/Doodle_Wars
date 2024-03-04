@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
 const labels = ['airplane',
 'bicycle',
@@ -36,6 +36,7 @@ export function BattleArena({ socket }) {
     const [coordinates, setCoordinates] = useState([]);
     const [objectName, setObjectName] = useState('');
     const [objId, setObjId] = useState(0);
+    const [roomCode, setRoomCode] = useState(localStorage.getItem('roomName'));
     let isDragging = false;
     let lastX, lastY;
 
@@ -145,6 +146,7 @@ export function BattleArena({ socket }) {
             console.log('line 465', label)
             setObjectName(label);
         })
+        
 
         // return() => clearInterval()
     }, []);
@@ -179,7 +181,9 @@ export function BattleArena({ socket }) {
 
     return (
         <div>
+            <h2>Room Code: {roomCode}</h2>
             <button onClick={handleExit}>Leave Room</button>
+            {players}
             <div className='flex flex-col justify-center items-center'>
                 <div className='p-4'>You have to draw a {objectName}</div>
                 <canvas

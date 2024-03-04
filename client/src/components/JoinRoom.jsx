@@ -46,6 +46,13 @@ export function JoinRoom({ socket }) {
         }
     }
 
+    function handleExit(e) {
+        e.preventDefault();
+        localStorage.removeItem('userName');
+        localStorage.removeItem('roomName');
+        navigate('/')
+    }
+
 
     return (
         <div className="mt-28">
@@ -54,6 +61,7 @@ export function JoinRoom({ socket }) {
                 <input className="border-solid border-2 border-black mb-4" type="text" name="code" id="code" placeholder="Room Name" onChange={(e) => setRoomName(e.target.value)} />
                 <button className="bg-blue-300 px-2" type="submit">Join</button>
             </form>
+            <button onClick={handleExit}>Leave Room</button>
             <h2>Socket id : {socket.id}</h2>
             {createStatus && <div>{createStatus}</div>}
         </div>
