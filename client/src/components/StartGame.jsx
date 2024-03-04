@@ -52,12 +52,10 @@ export function StartGame({ socket }) {
         <div className="flex flex-col">
             {name && <div>
                 <div>Welcome {name}. Your Room Code is: {code}</div>
-                Players: {name}
+                Players:
                 {players.map((player, index) => {
                     console.log(player,index)
-                    if(index > 0) {
                         return(<p key={index}>{player}</p>)
-                    }
                 })}
                 <button onClick={handleStart}>Start Game</button>
                 <button onClick={handleExit}>Leave Room</button>

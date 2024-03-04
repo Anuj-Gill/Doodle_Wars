@@ -183,7 +183,6 @@ export function BattleArena({ socket }) {
         <div>
             <h2>Room Code: {roomCode}</h2>
             <button onClick={handleExit}>Leave Room</button>
-            {players}
             <div className='flex flex-col justify-center items-center'>
                 <div className='p-4'>You have to draw a {objectName}</div>
                 <canvas
