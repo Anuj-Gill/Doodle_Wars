@@ -151,21 +151,24 @@ socketIO.on('connection', (socket) => {
       }   
       if (highestScorer !== '') {
           // Save the highest scorer in the scores object under the roomName
-          scores[roomName]['highestScorer'] = highestScorer;
-          console.log('winner name saved:', scores[roomName]['highestScorer']);
+          // scores[roomName]['highestScorer'] = highestScorer;
+          // console.log('winner name saved:', scores[roomName]['highestScorer']);
       }
 
     
   });
 
   socket.on('getWinnerName', (roomName) => {
-    try{
-      console.log('winner name sent!!', scores, scores[roomName]['highestScorer'])
-      socketIO.in(roomName).emit('winnerName', scores[roomName]['highestScorer'])
-    } catch(error) {
-      console.log(error)
+    try {
+        // Sort the scores dictionary based on scores in descending order
+        const sortedScores = Object.fromEntries(Object.entries(scores[roomName]).sort(([, a], [, b]) => b - a));
+
+        // Emit the sorted dictionary to clients
+        socketIO.in(roomName).emit('winnerName', sortedScores);
+    } catch (error) {
+        console.log(error);
     }
-  })
+  });
 
 })
 

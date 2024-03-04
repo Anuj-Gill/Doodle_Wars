@@ -202,8 +202,14 @@ export function BattleArena({ socket }) {
             <div className='flex flex-col justify-center items-center'>
                 {winner ? (
                     <div>
-                        <h3>Winner: {winner}</h3>
-                        <h3>Score: {result}</h3>
+                        <h3>Leaderboard:</h3>
+                        {Object.entries(winner).map(([key, value], index) => (
+                            <div key={index}>
+                                <span>{index + 1}: </span>
+                                <span>{key}: </span>
+                                <span>{value}</span>
+                            </div>
+                        ))}
                     </div>
                 ) : (
                     <div>
