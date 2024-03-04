@@ -84,7 +84,7 @@ socketIO.on('connection', (socket) => {
     console.log(roomName, 'Recieved request to start the game')
     if (roomName in data) {
       console.log('Sending request to start game')
-      socket.to(roomName).emit('enterGame', true);
+      socketIO.in(roomName).emit('enterGame', true);
     }
   })
 
@@ -170,13 +170,13 @@ socketIO.on('connection', (socket) => {
     }
   });
 
+  socket.on('reqAdminName', (roomName) => {
+    socketIO.in(roomName).emit('resIsAdmin',data[roomName][0][0])
+  })
+
 })
 
-
-
 app.use(bodyParser.json());
-
-
 
 app.get('/', (req, res) => {
   res.send('hii')

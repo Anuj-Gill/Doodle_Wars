@@ -2,30 +2,30 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 
 const labels = ['airplane',
-'bicycle',
-'book',
-'bowtie',
-'bucket',
-'butterfly',
-'cake',
-'car',
-'cat',
-'cell phone',
-'clock',
-'crown',
-'eye',
-'face',
-'fish',
-'house',
-'ice cream',
-'light bulb',
-'pizza',
-'river',
-'star',
-'sun',
-'t-shirt',
-'tree',
-'windmill'];
+    'bicycle',
+    'book',
+    'bowtie',
+    'bucket',
+    'butterfly',
+    'cake',
+    'car',
+    'cat',
+    'cell phone',
+    'clock',
+    'crown',
+    'eye',
+    'face',
+    'fish',
+    'house',
+    'ice cream',
+    'light bulb',
+    'pizza',
+    'river',
+    'star',
+    'sun',
+    't-shirt',
+    'tree',
+    'windmill'];
 
 export function BattleArena({ socket }) {
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ export function BattleArena({ socket }) {
     const [objId, setObjId] = useState(0);
     const [roomCode, setRoomCode] = useState(localStorage.getItem('roomName'));
     const [winner, setWinner] = useState('');
-    const [players, setPlayers] = useState([])
+    const [adminName, setAdminName] = useState(false);
     let isDragging = false;
     let lastX, lastY;
 
@@ -63,6 +63,7 @@ export function BattleArena({ socket }) {
 
     // Function to handle drawing submission
     const handleSubmit = () => {
+        socket.emit('reqAdminName', localStorage.getItem('roomName'));
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         console.log(canvas.toDataURL());
@@ -79,22 +80,30 @@ export function BattleArena({ socket }) {
             console.log(res)
             setResult(res.score);
             localStorage.setItem('score', res.score);
-            socket.emit('userScore',localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
+            socket.emit('userScore', localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
             setTimeout(() => {
-                socket.emit('getWinnerName', localStorage.getItem('roomName')); 
+                socket.emit('getWinnerName', localStorage.getItem('roomName'));
             }, 1000);
-            
+
         };
         handleFetch();
     };
-    
+
 
     socket.on('winnerName', winnerName => {
         setWinner(winnerName);
         console.log(winner)
     })
 
-    
+    socket.on('resIsAdmin', (response) => {
+        if (response === localStorage.getItem('userName')) {
+            setAdminName(true);
+        } else {
+            setAdminName(false);
+        }
+    });
+
+
 
     // Effect to initialize the canvas and set event listeners
     useEffect(() => {
@@ -161,9 +170,7 @@ export function BattleArena({ socket }) {
             const label = labels[objNum];
             console.log('line 465', label)
             setObjectName(label);
-        })
-        
-
+        });
         // return() => clearInterval()
     }, []);
     console.log('object id after requesting', objId)
@@ -184,7 +191,6 @@ export function BattleArena({ socket }) {
                 }
             });
         }, 1000);
-
         return () => clearInterval(intervalId);
     }, []);
 
@@ -194,6 +200,19 @@ export function BattleArena({ socket }) {
             handleSubmit();
         }
     }, [submitState]);
+
+    function handlePlayAgain() {
+        navigate('/startgame');
+
+    }
+
+    // socket.on('enterGame', (message, objId) => {
+    //     console.log('got the message in waiting', message)
+    //     if (message) {
+    //         navigate('/battlearena');
+    //     }
+    // });
+
 
     return (
         <div>
@@ -210,6 +229,7 @@ export function BattleArena({ socket }) {
                                 <span>{value}</span>
                             </div>
                         ))}
+                        {adminName && <button onClick={handlePlayAgain}>Play Again</button>}
                     </div>
                 ) : (
                     <div>
@@ -234,5 +254,5 @@ export function BattleArena({ socket }) {
             </div>
         </div>
     );
-    
+
 }
