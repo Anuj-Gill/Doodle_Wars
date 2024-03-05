@@ -29,7 +29,7 @@ const labels = ['airplane',
 
 export function BattleArena({ socket }) {
     const navigate = useNavigate();
-    const [timer, setTimer] = useState(5);
+    const [timer, setTimer] = useState(15);
     const [submitState, setSubmitState] = useState(false);
     const [result, setResult] = useState(0);
     const canvasRef = useRef(null);
@@ -204,7 +204,7 @@ export function BattleArena({ socket }) {
 
     useEffect(() => {
         socket.on('startNewGame', () => {
-            setTimer(5); // Reset timer
+            setTimer(15); // Reset timer
             setSubmitState(false); // Reset submission state
             setResult(0); // Reset result
             setGameState('running'); // Start a new game
@@ -223,7 +223,7 @@ export function BattleArena({ socket }) {
         console.log('start new game req sent!!')
         socket.emit('startNewGame', localStorage.getItem('roomName'));
         socket.emit('startGame', localStorage.getItem('roomName'));
-        setTimer(5); // Reset timer
+        setTimer(15); // Reset timer
         setSubmitState(false); // Reset submission state
         setResult(0); // Reset result
         setGameState('running'); // Start a new game
