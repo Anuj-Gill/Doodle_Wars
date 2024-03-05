@@ -155,12 +155,21 @@ socketIO.on('connection', (socket) => {
     socketIO.in(roomName).emit('resIsAdmin', data[roomName][0][0])
   })
 
-  // Server-side code
-  // socket.on('startNewGame', (roomName) => {
-  //   // Broadcast the 'startNewGame' event to all other clients in the same room
-  //   console.log('startingNewGame')
-  //   socket.to(roomName).emit('startNewGame');
-  // });
+  socket.on('userLeft', (userName, roomName) => {
+    if(roomName in data){
+      let i = data[roomName][0].indexOf(userName);
+       if (i !== -1) {
+        data[roomName][0].splice(i, 1);
+    }
+
+
+    if (data[roomName][0].length === 0) {
+        delete data[roomName];
+    }
+
+    console.log(data);
+    }
+  })
 
 })
 
