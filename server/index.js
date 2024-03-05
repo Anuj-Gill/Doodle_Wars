@@ -152,7 +152,7 @@ socketIO.on('connection', (socket) => {
   });
 
   socket.on('reqAdminName', (roomName) => {
-    socketIO.in(roomName).emit('resIsAdmin', data[roomName][0][0])
+    socketIO.in(roomName).emit('resIsAdmin', data[roomName][0][0]);
   })
 
   socket.on('userLeft', (userName, roomName) => {
@@ -160,12 +160,14 @@ socketIO.on('connection', (socket) => {
       let i = data[roomName][0].indexOf(userName);
        if (i !== -1) {
         data[roomName][0].splice(i, 1);
-    }
-
-
-    if (data[roomName][0].length === 0) {
+      }
+      
+      
+      if (data[roomName][0].length === 0) {
         delete data[roomName];
-    }
+      } else {
+        socketIO.in(roomName).emit('resIsAdmin', data[roomName][0][0]);
+      }
 
     console.log(data);
     }
