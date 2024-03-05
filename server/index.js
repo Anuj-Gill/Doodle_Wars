@@ -30,10 +30,8 @@ socketIO.on('connection', (socket) => {
 
   //Listen for newRoom
   socket.on('newRoom', (name, roomName) => {
-    console.log(data)
-    console.log(name, roomName);
     if (roomName in data) {
-      socket.to(roomName).emit('newRoomDeclined', "Room with this name already exists! Use another name")
+      socketIO.to(socket.id).emit('newRoomDeclined', "Room with this name already exists! Use another name")
     } else {
       socket.join(roomName)
       data[roomName] = [[name]];
@@ -60,12 +58,12 @@ socketIO.on('connection', (socket) => {
           data[roomName][0].push(name);
           socket.emit('newUserAccepted', `You joined ${roomName} room successfully!!`, data[roomName][0]);
           socketIO.in(roomName).emit('players-data', data[roomName][0]);
+          socket.to(roomName).emit('players-data', data[roomName][0]);
         }
       } else {
         socket.emit('newUserDeclined', 'Room does not exist!! Check the Room Code again.');
       }
       console.log(data)
-      socket.to(roomName).emit('players-data', data[roomName][0]);
     } catch (error) {
       console.log(error)
     }
@@ -80,11 +78,13 @@ socketIO.on('connection', (socket) => {
   })
 
   //Starting the game
-  socket.on('startGame', (roomName) => {
+  socket.on('startNewGame', (roomName) => {
     console.log(roomName, 'Recieved request to start the game')
     if (roomName in data) {
       console.log('Sending request to start game')
-      socketIO.in(roomName).emit('enterGame', true);
+      console.log('startingNewGame');
+      socket.to(roomName).emit('startNewGame', true);
+
     }
   })
 
@@ -123,16 +123,16 @@ socketIO.on('connection', (socket) => {
     }
   });
 
-  
+
 
   //scores
   socket.on('userScore', (user, roomName, score) => {
 
-    console.log('got a request from',user,'and room', roomName);
+    console.log('got a request from', user, 'and room', roomName);
 
     if (!(roomName in scores)) {
-        // If not present, initialize it with an empty object
-        scores[roomName] = {};
+      // If not present, initialize it with an empty object
+      scores[roomName] = {};
     }
     // Assign the score to the user in the respective room
     scores[roomName][user] = score;
@@ -142,37 +142,44 @@ socketIO.on('connection', (socket) => {
     let highestScore = 0;
     let highestScorer = '';
     console.log(data[roomName][0].length, Object.keys(scores[roomName]).length)
-    if(data[roomName][0].length ===Object.keys(scores[roomName]).length)
+    if (data[roomName][0].length === Object.keys(scores[roomName]).length)
       for (let username in scores[roomName]) {
-          if (scores[roomName][username] > highestScore) {
-              highestScore = scores[roomName][username];
-              highestScorer = username;
-          }
-      }   
-      if (highestScorer !== '') {
-          // Save the highest scorer in the scores object under the roomName
-          // scores[roomName]['highestScorer'] = highestScorer;
-          // console.log('winner name saved:', scores[roomName]['highestScorer']);
+        if (scores[roomName][username] > highestScore) {
+          highestScore = scores[roomName][username];
+          highestScorer = username;
+        }
       }
+    if (highestScorer !== '') {
+      // Save the highest scorer in the scores object under the roomName
+      // scores[roomName]['highestScorer'] = highestScorer;
+      // console.log('winner name saved:', scores[roomName]['highestScorer']);
+    }
 
-    
+
   });
 
   socket.on('getWinnerName', (roomName) => {
     try {
-        // Sort the scores dictionary based on scores in descending order
-        const sortedScores = Object.fromEntries(Object.entries(scores[roomName]).sort(([, a], [, b]) => b - a));
+      // Sort the scores dictionary based on scores in descending order
+      const sortedScores = Object.fromEntries(Object.entries(scores[roomName]).sort(([, a], [, b]) => b - a));
 
-        // Emit the sorted dictionary to clients
-        socketIO.in(roomName).emit('winnerName', sortedScores);
+      // Emit the sorted dictionary to clients
+      socketIO.in(roomName).emit('winnerName', sortedScores);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   });
 
   socket.on('reqAdminName', (roomName) => {
-    socketIO.in(roomName).emit('resIsAdmin',data[roomName][0][0])
+    socketIO.in(roomName).emit('resIsAdmin', data[roomName][0][0])
   })
+
+  // Server-side code
+  // socket.on('startNewGame', (roomName) => {
+  //   // Broadcast the 'startNewGame' event to all other clients in the same room
+  //   console.log('startingNewGame')
+  //   socket.to(roomName).emit('startNewGame');
+  // });
 
 })
 

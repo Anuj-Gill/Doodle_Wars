@@ -29,7 +29,7 @@ const labels = ['airplane',
 
 export function BattleArena({ socket }) {
     const navigate = useNavigate();
-    const [timer, setTimer] = useState(15);
+    const [timer, setTimer] = useState(5);
     const [submitState, setSubmitState] = useState(false);
     const [result, setResult] = useState(0);
     const canvasRef = useRef(null);
@@ -39,11 +39,10 @@ export function BattleArena({ socket }) {
     const [roomCode, setRoomCode] = useState(localStorage.getItem('roomName'));
     const [winner, setWinner] = useState('');
     const [adminName, setAdminName] = useState(false);
+    const [gameState, setGameState] = useState('running'); // New state for game state
     let isDragging = false;
     let lastX, lastY;
-
-
-
+    console.log(gameState)
     // Function to handle exiting the room
     function handleExit(e) {
         e.preventDefault();
@@ -53,6 +52,8 @@ export function BattleArena({ socket }) {
         navigate('/');
     }
 
+    
+
     // Function to handle clearing the canvas
     const handleClear = () => {
         setResult(false);
@@ -61,25 +62,26 @@ export function BattleArena({ socket }) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
+
     // Function to handle drawing submission
     const handleSubmit = () => {
         socket.emit('reqAdminName', localStorage.getItem('roomName'));
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        // const ctx = canvas.getContext('2d');
         console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://bbc8-2409-4081-1e1b-aefe-9197-cb5d-6506-5fa0.ngrok-free.app/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                body: JSON.stringify({ img: canvas.toDataURL(), object_idx: objId })
-            });
-            const res = await req.json();
-            console.log(res)
-            setResult(res.score);
-            localStorage.setItem('score', res.score);
+            // const req = await fetch('https://bbc8-2409-4081-1e1b-aefe-9197-cb5d-6506-5fa0.ngrok-free.app/predict', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         Accept: 'application/json'
+            //     },
+            //     body: JSON.stringify({ img: canvas.toDataURL(), object_idx: objId })
+            // });
+            // const res = await req.json();
+            // console.log(res)
+            // setResult(res.score);
+            localStorage.setItem('score', 10);
             socket.emit('userScore', localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
             setTimeout(() => {
                 socket.emit('getWinnerName', localStorage.getItem('roomName'));
@@ -88,7 +90,6 @@ export function BattleArena({ socket }) {
         };
         handleFetch();
     };
-
 
     socket.on('winnerName', winnerName => {
         setWinner(winnerName);
@@ -103,12 +104,44 @@ export function BattleArena({ socket }) {
         }
     });
 
-
-
     // Effect to initialize the canvas and set event listeners
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        // const ctx = canvas.getContext('2d');
+
+        // Event handlers for mouse actions
+        const handleMouseDown = (e) => {
+            isDragging = true;
+            const canvas = canvasRef.current;
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+        };
+
+        const handleMouseMove = (e) => {
+            if (isDragging) {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const rect = canvas.getBoundingClientRect();
+
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+
+                ctx.beginPath();
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+
+                lastX = currentX;
+                lastY = currentY;
+            }
+        };
+
+        const handleMouseUp = () => {
+            isDragging = false;
+        };
 
         canvas.addEventListener('mousedown', handleMouseDown);
         canvas.addEventListener('mousemove', handleMouseMove);
@@ -119,99 +152,81 @@ export function BattleArena({ socket }) {
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [canvasRef]);
+    }, [gameState]);
 
-
-
-    // Event handlers for mouse actions
-    const handleMouseDown = (e) => {
-        isDragging = true;
-        const canvas = canvasRef.current;
-        const rect = canvas.getBoundingClientRect();
-        lastX = e.clientX - rect.left;
-        lastY = e.clientY - rect.top;
-    };
-
-    const handleMouseMove = (e) => {
-        if (isDragging) {
-            const canvas = canvasRef.current;
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
-
-            ctx.beginPath();
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(currentX, currentY);
-            ctx.stroke();
-
-            lastX = currentX;
-            lastY = currentY;
-        }
-    };
-
-    const handleMouseUp = () => {
-        isDragging = false;
-    };
 
     // Effect to select a random object to draw
     useEffect(() => {
+        if (gameState === 'running') {
+            console.log('obj id before requesting', objId)
+            console.log('requestingObjId')
+            socket.emit('requestObjId', localStorage.getItem('roomName'));
+            socket.on('sendingObjId', (objNum) => {
+                console.log(objNum, 'battleArena line 461')
+                setObjId(objNum)
+                console.log(objId, 'line 463')
+                const label = labels[objNum];
+                console.log('line 465', label)
+                setObjectName(label);
+            });
+        }
+    }, [gameState]);
 
-        console.log('obj id before requesting', objId)
-        console.log('requestingObjId')
-        socket.emit('requestObjId', localStorage.getItem('roomName'));
-        socket.on('sendingObjId', (objNum) => {
-            console.log(objNum, 'battleArena line 461')
-            setObjId(objNum)
-            console.log(objId, 'line 463')
-            const label = labels[objNum];
-            console.log('line 465', label)
-            setObjectName(label);
-        });
-        // return() => clearInterval()
-    }, []);
     console.log('object id after requesting', objId)
 
-
-
-
-
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setTimer((prevTimer) => {
-                if (prevTimer > 0) {
-                    return prevTimer - 1;
-                } else {
-                    clearInterval(intervalId);
-                    setSubmitState(true);
-                    return 0;
-                }
-            });
-        }, 1000);
-        return () => clearInterval(intervalId);
-    }, []);
+        if (gameState === 'running') {
+            const intervalId = setInterval(() => {
+                setTimer((prevTimer) => {
+                    if (prevTimer > 0) {
+                        return prevTimer - 1;
+                    } else {
+                        clearInterval(intervalId);
+                        setSubmitState(true);
+                        return 0;
+                    }
+                });
+            }, 1000);
+            return () => clearInterval(intervalId);
+        }
+    }, [gameState]);
 
     // Effect to handle submission when submitState changes
     useEffect(() => {
         if (submitState) {
             handleSubmit();
+            setGameState('idle'); // Set game state to idle after submission
         }
     }, [submitState]);
 
-    function handlePlayAgain() {
-        navigate('/startgame');
+    useEffect(() => {
+        socket.on('startNewGame', () => {
+            setTimer(15); // Reset timer
+            setSubmitState(false); // Reset submission state
+            setResult(0); // Reset result
+            setGameState('running'); // Start a new game
+            setWinner(''); // Reset winner
+            handleClear(); // Clear the canvas
+            // Reset any other necessary state variables
+        });
 
-    }
+        // Clean up the event listener when the component unmounts
+        return () => {
+            socket.off('startNewGame');
+        };
+    }, [socket, handleClear]);
 
-    // socket.on('enterGame', (message, objId) => {
-    //     console.log('got the message in waiting', message)
-    //     if (message) {
-    //         navigate('/battlearena');
-    //     }
-    // });
+    const handlePlayAgain = () => {
+        console.log('start new game req sent!!')
+        socket.emit('startNewGame', localStorage.getItem('roomName'));
+        socket.emit('startGame', localStorage.getItem('roomName'));
+        setTimer(15); // Reset timer
+        setSubmitState(false); // Reset submission state
+        setResult(0); // Reset result
+        setGameState('running'); // Start a new game
+        setWinner(''); // Reset winner
+        handleClear(); // Clear the canvas
+    };
 
 
     return (
@@ -254,5 +269,4 @@ export function BattleArena({ socket }) {
             </div>
         </div>
     );
-
 }

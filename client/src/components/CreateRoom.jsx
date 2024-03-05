@@ -17,13 +17,13 @@ export function CreateRoom({socket}) {
             setCreateStatus('Above fields can not be empty!')
         }
         else if( (!localStorage.getItem('userName'))) {
-            localStorage.setItem("userName",name);
-            localStorage.setItem("roomName",roomName);
             socket.emit('newRoom',name, roomName);
             socket.on('newRoomDeclined',(message) => {
                 setCreateStatus(message)
             })
             socket.on('newRoomAccepted',(message) => {
+                localStorage.setItem("userName",name);
+                localStorage.setItem("roomName",roomName);
                 navigate('/startgame');
             })
         } 

@@ -20,13 +20,7 @@ export function StartGame({ socket }) {
 
     function handleStart(e) {
         e.preventDefault();
-        socket.emit('startGame', localStorage.getItem('roomName'));
-        // socket.on('enterGame', (message) => {
-        //     console.log('got the message not in waiting',message)
-        //     setStartStatus(message);
-        //     navigate('/battlearena');
-            
-        // });
+        socket.emit('startNewGame', localStorage.getItem('roomName'));
         socket.emit('generateObjId',localStorage.getItem('roomName'));
         navigate('/battlearena');
     }
