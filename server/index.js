@@ -136,33 +136,14 @@ socketIO.on('connection', (socket) => {
     }
     // Assign the score to the user in the respective room
     scores[roomName][user] = score;
-    console.log(scores);
-
-    // Calculate the highest score and corresponding username
-    let highestScore = 0;
-    let highestScorer = '';
-    console.log(data[roomName][0].length, Object.keys(scores[roomName]).length)
-    if (data[roomName][0].length === Object.keys(scores[roomName]).length)
-      for (let username in scores[roomName]) {
-        if (scores[roomName][username] > highestScore) {
-          highestScore = scores[roomName][username];
-          highestScorer = username;
-        }
-      }
-    if (highestScorer !== '') {
-      // Save the highest scorer in the scores object under the roomName
-      // scores[roomName]['highestScorer'] = highestScorer;
-      // console.log('winner name saved:', scores[roomName]['highestScorer']);
-    }
-
-
+    console.log(scores)
   });
 
   socket.on('getWinnerName', (roomName) => {
     try {
       // Sort the scores dictionary based on scores in descending order
       const sortedScores = Object.fromEntries(Object.entries(scores[roomName]).sort(([, a], [, b]) => b - a));
-
+      console.log(sortedScores)
       // Emit the sorted dictionary to clients
       socketIO.in(roomName).emit('winnerName', sortedScores);
     } catch (error) {

@@ -29,7 +29,7 @@ const labels = ['airplane',
 
 export function BattleArena({ socket }) {
     const navigate = useNavigate();
-    const [timer, setTimer] = useState(5);
+    const [timer, setTimer] = useState(60);
     const [submitState, setSubmitState] = useState(false);
     const [result, setResult] = useState(0);
     const canvasRef = useRef(null);
@@ -44,6 +44,8 @@ export function BattleArena({ socket }) {
     let lastX, lastY;
     console.log(gameState)
     // Function to handle exiting the room
+
+
     function handleExit(e) {
         e.preventDefault();
         localStorage.removeItem('userName');
@@ -68,20 +70,20 @@ export function BattleArena({ socket }) {
         socket.emit('reqAdminName', localStorage.getItem('roomName'));
         const canvas = canvasRef.current;
         // const ctx = canvas.getContext('2d');
-        console.log(canvas.toDataURL());
+        // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            // const req = await fetch('https://bbc8-2409-4081-1e1b-aefe-9197-cb5d-6506-5fa0.ngrok-free.app/predict', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         Accept: 'application/json'
-            //     },
-            //     body: JSON.stringify({ img: canvas.toDataURL(), object_idx: objId })
-            // });
-            // const res = await req.json();
-            // console.log(res)
-            // setResult(res.score);
-            localStorage.setItem('score', 10);
+            const req = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json'
+                },
+                body: JSON.stringify({ img: canvas.toDataURL(), object_idx: objId })
+            });
+            const res = await req.json();
+            console.log(res)
+            setResult(res.score);
+            localStorage.setItem('score',res.score)
             socket.emit('userScore', localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
             setTimeout(() => {
                 socket.emit('getWinnerName', localStorage.getItem('roomName'));
@@ -201,7 +203,7 @@ export function BattleArena({ socket }) {
 
     useEffect(() => {
         socket.on('startNewGame', () => {
-            setTimer(15); // Reset timer
+            setTimer(60); // Reset timer
             setSubmitState(false); // Reset submission state
             setResult(0); // Reset result
             setGameState('running'); // Start a new game
@@ -220,7 +222,7 @@ export function BattleArena({ socket }) {
         console.log('start new game req sent!!')
         socket.emit('startNewGame', localStorage.getItem('roomName'));
         socket.emit('startGame', localStorage.getItem('roomName'));
-        setTimer(15); // Reset timer
+        setTimer(5); // Reset timer
         setSubmitState(false); // Reset submission state
         setResult(0); // Reset result
         setGameState('running'); // Start a new game
