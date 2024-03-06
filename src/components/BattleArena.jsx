@@ -161,8 +161,7 @@ export function BattleArena({ socket }) {
     // Effect to select a random object to draw
     useEffect(() => {
         if (gameState === 'running') {
-            console.log('obj id before requesting', objId)
-            console.log('requestingObjId')
+            console.log('obj id before requesting', objId);
             socket.emit('requestObjId', localStorage.getItem('roomName'));
             socket.on('sendingObjId', (objNum) => {
                 console.log(objNum, 'battleArena line 461')
@@ -222,7 +221,7 @@ export function BattleArena({ socket }) {
     const handlePlayAgain = () => {
         console.log('start new game req sent!!')
         socket.emit('startNewGame', localStorage.getItem('roomName'));
-        socket.emit('startGame', localStorage.getItem('roomName'));
+        socket.emit('generateObjId',localStorage.getItem('roomName'));
         setTimer(15); // Reset timer
         setSubmitState(false); // Reset submission state
         setResult(0); // Reset result
