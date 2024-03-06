@@ -8,8 +8,6 @@ export function JoinRoom({ socket }) {
     const [roomName, setRoomName] = useState('');
     const [createStatus, setCreateStatus] = useState(true);
 
-    console.log(name, roomName)
-
     function handleJoin(e) {
         e.preventDefault();
         const lname = localStorage.getItem('userName');
@@ -32,14 +30,6 @@ export function JoinRoom({ socket }) {
                     navigate('/wait');
                 }
             })
-            // socket.on('players-data',(data) => {
-            //     console.log(data)
-            //     if(data[0] === localStorage.getItem('userName')) {
-            //         navigate('/battlearena')
-            //     } else {
-
-            //     }
-            // })
         }
         else {
             setCreateStatus('You are already in a room! Leave the current room and then try again.');

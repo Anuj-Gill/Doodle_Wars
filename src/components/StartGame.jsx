@@ -25,22 +25,13 @@ export function StartGame({ socket }) {
         navigate('/battlearena');
     }
 
-    // setInterval(() => {
-    //     console.log('data requested')
-    //     socket.emit('request-data', localStorage.getItem('roomName'));
-    // },5000)
-
     useEffect(() => {
         socket.emit('req-players-data',localStorage.getItem('roomName'));
     },[])
 
     socket.on('players-data',(data) => {
-        console.log('got players data: ',data)
         setPlayers(data)
-        console.log(players);
     })
-    console.log(players);
-
 
     return (
         <div className="flex flex-col">

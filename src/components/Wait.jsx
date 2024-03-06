@@ -7,7 +7,6 @@ export function Wait({ socket }) {
     const [startStatus, setStartStatus] = useState(false);
 
     socket.on('startNewGame', (message, objId) => {
-        console.log('got the message in waiting',message)
         if(message) {
             navigate('/battlearena');    
         }

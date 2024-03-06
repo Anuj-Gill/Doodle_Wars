@@ -28,7 +28,6 @@ function App() {
         <Route path='/startgame' element={<StartGame socket={socket}/>} />
         <Route path='/wait' element={<Wait socket={socket}/>} />
         <Route path='/battlearena' element={<BattleArena socket={socket}/>} />
-        <Route path='/score' element={<Score socket={socket}/>} />
       </Routes>
     </div>
 

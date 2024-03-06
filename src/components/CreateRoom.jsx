@@ -6,9 +6,6 @@ export function CreateRoom({socket}) {
     const [name, setName] = useState('');
     const [roomName, setRoomName] = useState('');
     const [ createStatus, setCreateStatus ] = useState(true)
-    // console.log(name)
-    // console.log(roomName)
-    console.log(createStatus)
 
     function handleCreate(e) {
         e.preventDefault();
