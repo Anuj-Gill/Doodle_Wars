@@ -73,7 +73,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://66a5-42-104-87-5.ngrok-free.app/predict', {
+            const req = await fetch('https://14c5-183-87-178-170.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
