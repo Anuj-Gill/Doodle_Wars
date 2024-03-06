@@ -7,7 +7,6 @@ import { CreateRoom } from './components/CreateRoom';
 import { StartGame } from './components/StartGame';
 import { Wait } from './components/Wait';
 import { BattleArena } from './components/BattleArena';
-import { Score } from './components/Score';
 import socketIO from 'socket.io-client';
 import backgroundImage from './assets/background.png';
 
