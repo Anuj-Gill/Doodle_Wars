@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './App.css';
-import { WhiteBoard } from './components/WhiteBoard';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import { Home }  from './components/Home';
 import { JoinRoom } from './components/JoinRoom';
