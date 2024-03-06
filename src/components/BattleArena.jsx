@@ -48,14 +48,14 @@ export function BattleArena({ socket }) {
 
     function handleExit(e) {
         e.preventDefault();
-        socket.emit('userLeft',localStorage.getItem('userName'), localStorage.getItem('roomName'));
+        socket.emit('userLeft', localStorage.getItem('userName'), localStorage.getItem('roomName'));
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
         localStorage.removeItem('score');
         navigate('/');
     }
 
-    
+
 
     // Function to handle clearing the canvas
     const handleClear = () => {
@@ -84,7 +84,7 @@ export function BattleArena({ socket }) {
             const res = await req.json();
             console.log(res)
             setResult(res.score);
-            localStorage.setItem('score',res.score)
+            localStorage.setItem('score', res.score)
             socket.emit('userScore', localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
             setTimeout(() => {
                 socket.emit('getWinnerName', localStorage.getItem('roomName'));
@@ -130,12 +130,8 @@ export function BattleArena({ socket }) {
                 const currentX = e.clientX - rect.left;
                 const currentY = e.clientY - rect.top;
 
-                ctx.beginPath();
-                ctx.strokeStyle = 'red';
-                ctx.lineWidth = 2;
-                ctx.moveTo(lastX, lastY);
-                ctx.lineTo(currentX, currentY);
-                ctx.stroke();
+                draw(lastX, lastY, currentX, currentY);
+
 
                 lastX = currentX;
                 lastY = currentY;
@@ -149,6 +145,17 @@ export function BattleArena({ socket }) {
         const draw = (startX, startY, endX, endY) => {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext('2d');
+
+            // Scale the coordinates based on the actual canvas size and the displayed size
+            const scaleX = canvas.width / canvas.offsetWidth;
+            const scaleY = canvas.height / canvas.offsetHeight;
+
+            // Adjust the coordinates based on the scale
+            startX *= scaleX;
+            startY *= scaleY;
+            endX *= scaleX;
+            endY *= scaleY;
+
             ctx.beginPath();
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 2;
@@ -259,7 +266,7 @@ export function BattleArena({ socket }) {
     const handlePlayAgain = () => {
         console.log('start new game req sent!!')
         socket.emit('startNewGame', localStorage.getItem('roomName'));
-        socket.emit('generateObjId',localStorage.getItem('roomName'));
+        socket.emit('generateObjId', localStorage.getItem('roomName'));
         setTimer(15); // Reset timer
         setSubmitState(false); // Reset submission state
         setResult(0); // Reset result
@@ -293,6 +300,7 @@ export function BattleArena({ socket }) {
                             ref={canvasRef}
                             id='canvas'
                             className='border-2 border-black border-solid bg-white mb-5'
+                            style={{ height: "350px", width: "350px" }}
                             height={100}
                             width={100}></canvas>
                         <div className='flex flex-col mb-5'>
