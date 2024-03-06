@@ -8,7 +8,6 @@ import { StartGame } from './components/StartGame';
 import { Wait } from './components/Wait';
 import { BattleArena } from './components/BattleArena';
 import socketIO from 'socket.io-client';
-import backgroundImage from './assets/background.png';
 
 const socket = socketIO.connect("https://doodlewars-backend.onrender.com");
 
@@ -17,7 +16,7 @@ function App() {
 
   return (
     <BrowserRouter>
-    <div>
+    <div className='bg-[url("./assets/background.png")] bg-cover bg-center  bg-no-repeat'>
       <Routes>
         <Route path='/' element={<Home socket={socket} />} />
         <Route path='/home' element={<Home socket={socket}/>} />
