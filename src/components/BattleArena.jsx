@@ -146,14 +146,52 @@ export function BattleArena({ socket }) {
             isDragging = false;
         };
 
+        const draw = (startX, startY, endX, endY) => {
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+        };
+
+
+        const handleTouchMove = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const currentX = touch.clientX - rect.left;
+            const currentY = touch.clientY - rect.top;
+            draw(lastX, lastY, currentX, currentY);
+            lastX = currentX;
+            lastY = currentY;
+        };
+
+
+        const handleTouchStart = (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            lastX = touch.clientX - rect.left;
+            lastY = touch.clientY - rect.top;
+        };
+
         canvas.addEventListener('mousedown', handleMouseDown);
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('mouseup', handleMouseUp);
+
+        canvas.addEventListener('touchstart', handleTouchStart);
+        canvas.addEventListener('touchmove', handleTouchMove);
 
         return () => {
             canvas.removeEventListener('mousedown', handleMouseDown);
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseup', handleMouseUp);
+
+            canvas.removeEventListener('touchstart', handleTouchStart);
+            canvas.removeEventListener('touchmove', handleTouchMove);
         };
     }, [gameState]);
 
