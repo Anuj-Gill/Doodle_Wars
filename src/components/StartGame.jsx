@@ -11,14 +11,6 @@ export function StartGame({ socket }) {
     const name = localStorage.getItem('userName');
     const code = localStorage.getItem('roomName');
 
-    function handleExit(e) {
-        e.preventDefault();
-        localStorage.removeItem('userName');
-        localStorage.removeItem('roomName');
-        socket.emit('userLeft', (name, code));
-        navigate('/');
-    }
-
     function handleStart(e) {
         e.preventDefault();
         socket.emit('startNewGame', localStorage.getItem('roomName'));

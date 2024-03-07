@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeaveRoomBtn } from "./LeaveRoomBtn";
+import { SpinnerDotted } from "spinners-react";
 
 export function Wait({ socket }) {
 
     const navigate = useNavigate();
-    const [startStatus, setStartStatus] = useState(false);
     const [players, setPlayers] = useState([]);
 
     const name = localStorage.getItem('userName');
@@ -17,39 +17,32 @@ export function Wait({ socket }) {
         }
     });
 
-    function handleExit(e) {
-        e.preventDefault();
-        localStorage.removeItem('userName');
-        localStorage.removeItem('roomName');
-        socket.emit('userLeft', (name, code));
-        navigate('/');
-    }
-
-    useEffect(() => {
-        socket.emit('req-players-data', localStorage.getItem('roomName'));
-    }, [])
+    socket.on('players-data', (data) => {
+        setPlayers(data)
+    })
 
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
-            <LeaveRoomBtn socket={socket}/>
-            {!startStatus &&
-                <div>
-                    <div>Welcome {name}. Your Room Code is: {code}</div>
+        <div className="flex flex-col items-center min-h-screen font-irish-grover text-white text-2xl">
+            <LeaveRoomBtn socket={socket} />
+            <div className="flex flex-col mt-10">
+                <div>Welcome <span className="animate-pulse text-4xl">{name}</span>. </div>
+                <span>Your Room Code is: <span className="animate-pulse text-4xl">{code}</span></span>
+                <div className="flex justify-start">
                     Players:
-                    {players.map((player, index) => {
-                        console.log(player, index)
-                        return (<p key={index}>{player}</p>)
-                    })}
+                    <div className="flex flex-col gap-y-1 ml-2">
+                        {players.map((player, index) => {
+                            console.log(player, index)
+                            return (<p key={index}>{player}</p>)
+                        })}
+                    </div>
                 </div>
-            }
-                <div className="flex">
-                <p className="animate-spin h-5 w-5 mr-3  " viewBox="0 0 24 24">
-                @
-                </p>
-                Waiting for the host to start the game...
-                </div>
-            {/* You can add more UI elements for when the game is about to start */}
+            </div>
+            <div className="flex items-center mt-20">
+                <span className="ml-2 mr-4 text-4xl">Waiting for the host to start the game</span>
+                <SpinnerDotted size={40} thickness={200} speed={117} color="rgba(255,255,255, 0.8)" />
+            </div>
         </div>
-    )
+    );
+
 }

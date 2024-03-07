@@ -9,6 +9,10 @@ module.exports = {
       fontFamily: {
         'irish-grover': ['Irish Grover', 'sans-serif'],
       },
+      animation: {
+        'dots-shrink': 'spinners-react-dotted-shrin',
+        'center-dot': 'spinners-react-dotted-center',
+      }
     },
   },
   plugins: [],

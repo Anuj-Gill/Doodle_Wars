@@ -10,7 +10,7 @@ export function LeaveRoomBtn({socket}) {
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
         localStorage.removeItem('score');
-        navigate('/');
+        navigate('/home');
     }
 
     return(

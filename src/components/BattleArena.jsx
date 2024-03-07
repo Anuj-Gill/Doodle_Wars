@@ -41,6 +41,8 @@ export function BattleArena({ socket }) {
     const [winner, setWinner] = useState('');
     const [adminName, setAdminName] = useState(false);
     const [gameState, setGameState] = useState('running'); // New state for game state
+    const [canvasHeight, setCanvasHeight] = useState(window.innerHeight * 0.5);
+    const [canvasWidth, setCanvasWidth] = useState(window.innerWidth * 0.5);
     let isDragging = false;
     let lastX, lastY;
     console.log(gameState)
@@ -67,7 +69,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://1b20-183-87-178-183.ngrok-free.app/predict', {
+            const req = await fetch('https://0b9e-34-80-73-160.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -273,7 +275,7 @@ export function BattleArena({ socket }) {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
             <LeaveRoomBtn socket={socket}/>
-            <h2 className='mb-10 -mt-14'>Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
+            <h2 className='mb-10 '>Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
             <div className='flex flex-col justify-center items-center'>
                 {winner ? (
                     <div className='flex flex-col justify-around align-middle '>
@@ -299,9 +301,8 @@ export function BattleArena({ socket }) {
                                 ref={canvasRef}
                                 id='canvas'
                                 className='border-2 border-black border-solid bg-white mb-5 justify-self-center'
-                                style={{ height: "350px", width: "350px" }}
-                                height={100}
-                                width={100}></canvas>
+                                style={{ height: `${canvasHeight}px`, width: `${canvasWidth}px` }}
+                                ></canvas>
                             <div className='flex flex-col mb-5 items-center'>
 
                                 <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:text-white hover:bg-blue-900 transition-colors duration-300 font-bold" onClick={handleClear}>
