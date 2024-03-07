@@ -14,7 +14,7 @@ export function About({socket}) {
      <div className="max-w-3xl text-center mb-8 bg">
         <p className="text-white text-lg">
           Doodle Wars is a fast-paced multiplayer game where players doodle
-          random objects within 20 seconds, like cats, pizzas, or airplanes.
+          random objects within 15 seconds, like cats, pizzas, or airplanes.
           Your doodles are scored by a neural network from 1 to 10. The highest
           scorer wins the round. It's addictive fun for all ages. Gather your
           friends, grab your pencils, and unleash your inner artist in the
