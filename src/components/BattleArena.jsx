@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
+import { LeaveRoomBtn } from './LeaveRoomBtn';
 
 const labels = ['airplane',
     'bicycle',
@@ -28,7 +29,7 @@ const labels = ['airplane',
     'windmill'];
 
 export function BattleArena({ socket }) {
-    const navigate = useNavigate();
+    
     const [timer, setTimer] = useState(15);
     const [submitState, setSubmitState] = useState(false);
     const [result, setResult] = useState('');
@@ -46,14 +47,7 @@ export function BattleArena({ socket }) {
     // Function to handle exiting the room
 
 
-    function handleExit(e) {
-        e.preventDefault();
-        socket.emit('userLeft', localStorage.getItem('userName'), localStorage.getItem('roomName'));
-        localStorage.removeItem('userName');
-        localStorage.removeItem('roomName');
-        localStorage.removeItem('score');
-        navigate('/');
-    }
+    
 
 
 
@@ -278,7 +272,7 @@ export function BattleArena({ socket }) {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
-            <button className="absolute top-2 right-1 px-6 py-2 mb-4 sm:mb-0 sm:mr-1 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold" onClick={handleExit}>Leave Room</button>
+            <LeaveRoomBtn socket={socket}/>
             <h2 className='mb-10 -mt-14'>Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
             <div className='flex flex-col justify-center items-center'>
                 {winner ? (
@@ -310,7 +304,7 @@ export function BattleArena({ socket }) {
                                 width={100}></canvas>
                             <div className='flex flex-col mb-5 items-center'>
 
-                                <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold" onClick={handleClear}>
+                                <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:text-white hover:bg-blue-900 transition-colors duration-300 font-bold" onClick={handleClear}>
                                     Clear
                                 </button>
                             </div>

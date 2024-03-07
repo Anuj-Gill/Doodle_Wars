@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LeaveRoomBtn } from "./LeaveRoomBtn";
 
 export function Wait({ socket }) {
 
@@ -31,7 +32,7 @@ export function Wait({ socket }) {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
-            <button className="absolute top-2 right-1 px-6 py-2 mb-4 sm:mb-0 sm:mr-1 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold"  onClick={handleExit}>Leave Room</button>
+            <LeaveRoomBtn socket={socket}/>
             {!startStatus &&
                 <div>
                     <div>Welcome {name}. Your Room Code is: {code}</div>
