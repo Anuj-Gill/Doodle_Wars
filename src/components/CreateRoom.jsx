@@ -37,7 +37,7 @@ export function CreateRoom({ socket }) {
         <div className="flex flex-col items-center justify-around  min-h-screen">
             <LeaveRoomBtn socket={socket}/>
             <div className="">
-                <h1 className="mt-10 text-8xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
+                <h1 className="mt-10 text-6xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
             </div>
             <form className="flex flex-col items-center -mt-10 " onSubmit={handleCreate}>
                 <input className="font-black font-irish-grover text-lg mb-3 border-solid border-2 border-black p-1 w-11/12 rounded-md placeholder-gray-400 " type="text" name="name" id="name" placeholder="Name" onChange={(e) => setName(e.target.value)} />

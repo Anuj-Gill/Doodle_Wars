@@ -271,9 +271,9 @@ export function BattleArena({ socket }) {
 
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
+        <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl pt-16">
             <LeaveRoomBtn socket={socket} />
-            <h2 className="mb-10">Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
+            <h2 className="">Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
             <div className="flex flex-col justify-center items-center w-full md:flex-row md:items-start">
                 {winner ? (
                     <div className="flex flex-col justify-around align-middle w-full md:w-auto p-2">

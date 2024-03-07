@@ -7,7 +7,7 @@ export function About({socket}) {
  return (
    <div className="flex flex-col items-center justify-around min-h-screen">
      <div className="mb-4">
-       <h1 className="mt-10 text-8xl font-bold text-white sm:text-6xl md:text-8xl">
+       <h1 className="mt-10 text-6xl font-bold text-white sm:text-6xl md:text-8xl">
          Doodle Wars
        </h1>
      </div>

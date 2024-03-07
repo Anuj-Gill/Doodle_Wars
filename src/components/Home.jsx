@@ -8,7 +8,7 @@ export function Home({ socket }) {
   return (
     <div className="flex flex-col items-center justify-around  min-h-screen">
       <div className=" mb-4">
-        <h1 className="mt-10 text-8xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
+        <h1 className="mt-10 text-6xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
       </div>
       <div className="flex flex-col sm:flex-row mb-4 gap-x-20 ">
         <button
