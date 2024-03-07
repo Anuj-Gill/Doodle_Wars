@@ -300,6 +300,8 @@ export function BattleArena({ socket }) {
                                 id="canvas"
                                 className="border-2 border-black border-solid bg-white mb-5 justify-self-center"
                                 style={{ height: `350px`, width: `100%`, maxWidth: `350px` }}
+                                height={100}
+                                width={100}
                             ></canvas>
                             <div className="flex flex-col mb-5 items-center">
                                 <button
