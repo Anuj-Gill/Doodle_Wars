@@ -41,8 +41,6 @@ export function BattleArena({ socket }) {
     const [winner, setWinner] = useState('');
     const [adminName, setAdminName] = useState(false);
     const [gameState, setGameState] = useState('running'); // New state for game state
-    const [canvasHeight, setCanvasHeight] = useState(window.innerHeight * 0.5);
-    const [canvasWidth, setCanvasWidth] = useState(window.innerWidth * 0.5);
     let isDragging = false;
     let lastX, lastY;
     console.log(gameState)
@@ -274,44 +272,46 @@ export function BattleArena({ socket }) {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
-            <LeaveRoomBtn socket={socket}/>
-            <h2 className='mb-10 '>Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
-            <div className='flex flex-col justify-center items-center'>
+            <LeaveRoomBtn socket={socket} />
+            <h2 className="mb-10">Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
+            <div className="flex flex-col justify-center items-center w-full md:flex-row md:items-start">
                 {winner ? (
-                    <div className='flex flex-col justify-around align-middle '>
+                    <div className="flex flex-col justify-around align-middle w-full md:w-auto">
                         <div>
-                        <h3 className='text-4xl'>Leaderboard</h3>
+                            <h3 className="text-4xl">Leaderboard</h3>
                         </div>
                         <div>
-                        {Object.entries(winner).map(([key, value], index) => (
-                            <div key={index}>
-                                <span>{index + 1}: </span>
-                                <span>{key}: </span>
-                                <span>{value}</span>
-                            </div>
-                        ))}
+                            {Object.entries(winner).map(([key, value], index) => (
+                                <div key={index}>
+                                    <span>{index + 1}: </span>
+                                    <span>{key}: </span>
+                                    <span>{value}</span>
+                                </div>
+                            ))}
                         </div>
                         {adminName && <button onClick={handlePlayAgain}>Play Again</button>}
                     </div>
                 ) : (
-                    <div className='flex items-center'>
-                        <div className='flex flex-col'>
-                            <div className='p-4'>You have to draw a <span className="text-4xl">{objectName}</span></div>
+                    <div className="flex flex-col-reverse items-center p-2 ">
+                        <div className="flex flex-col items-center mb-8 md:mb-0">
+                            <div className="p-4">You have to draw a <span className="text-4xl">{objectName}</span></div>
                             <canvas
                                 ref={canvasRef}
-                                id='canvas'
-                                className='border-2 border-black border-solid bg-white mb-5 justify-self-center'
-                                style={{ height: `${canvasHeight}px`, width: `${canvasWidth}px` }}
-                                ></canvas>
-                            <div className='flex flex-col mb-5 items-center'>
-
-                                <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:text-white hover:bg-blue-900 transition-colors duration-300 font-bold" onClick={handleClear}>
+                                id="canvas"
+                                className="border-2 border-black border-solid bg-white mb-5 justify-self-center"
+                                style={{ height: `350px`, width: `100%`, maxWidth: `350px` }}
+                            ></canvas>
+                            <div className="flex flex-col mb-5 items-center">
+                                <button
+                                    className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:text-white hover:bg-blue-900 transition-colors duration-300 font-bold"
+                                    onClick={handleClear}
+                                >
                                     Clear
                                 </button>
                             </div>
                         </div>
-                        <div className='ml-8 p-2'>
-                            <div className='p-1'>Timer: <span className='text-4xl p-1'>{timer}</span> seconds</div>
+                        <div className="ml-8 p-2">
+                            <div className="p-1">Timer: <span className="text-4xl p-4">{timer}</span> seconds</div>
                         </div>
                     </div>
                 )}
