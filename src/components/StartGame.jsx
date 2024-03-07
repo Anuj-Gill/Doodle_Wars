@@ -39,12 +39,14 @@ export function StartGame({ socket }) {
             {name && <div>
                 <div>Welcome <span className="animate-pulse text-4xl">{name}</span>.</div>
                 <p>Your Room Code is: <span className="animate-pulse text-4xl">{code}</span></p>
+                <div className="flex justify-start">
                 Players:
-                <div className="flex flex-col gap-y-2">
+                <div className="flex flex-col gap-y-1 ml-2">
                     {players.map((player, index) => {
                         console.log(player, index)
                         return (<p key={index}>{player}</p>)
                     })}
+                </div>
                 </div>
                 <div className="flex gap-x-5 mt-10">
                     <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold" onClick={handleStart}>Start Game</button>
