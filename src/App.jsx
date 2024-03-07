@@ -19,7 +19,7 @@ function App() {
     <BrowserRouter>
     <div className='bg-[url("./assets/background.png")] bg-cover bg-center  bg-no-repeat'>
       <Routes>
-        <Route path='/about' element={<About socket={socket} />} />
+        <Route path='/' element={<About socket={socket} />} />
         <Route path='/home' element={<Home socket={socket}/>} />
         <Route path='/joinroom' element={<JoinRoom socket={socket}/>} />
         <Route path='/createroom' element={<CreateRoom socket={socket}/>} />
