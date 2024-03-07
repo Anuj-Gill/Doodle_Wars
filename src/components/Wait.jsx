@@ -25,7 +25,7 @@ export function Wait({ socket }) {
     return (
         <div className="flex flex-col items-center min-h-screen font-irish-grover text-white text-2xl">
             <LeaveRoomBtn socket={socket} />
-            <div className="flex flex-col mt-10">
+            <div className="flex flex-col mt-20">
                 <div>Welcome <span className="animate-pulse text-4xl">{name}</span>. </div>
                 <span>Your Room Code is: <span className="animate-pulse text-4xl">{code}</span></span>
                 <div className="flex justify-start">
