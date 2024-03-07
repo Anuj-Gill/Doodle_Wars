@@ -31,11 +31,11 @@ export function BattleArena({ socket }) {
     const navigate = useNavigate();
     const [timer, setTimer] = useState(15);
     const [submitState, setSubmitState] = useState(false);
-    const [result, setResult] = useState(0);
+    const [result, setResult] = useState('');
     const canvasRef = useRef(null);
     const [coordinates, setCoordinates] = useState([]);
     const [objectName, setObjectName] = useState('');
-    const [objId, setObjId] = useState(0);
+    const [objId, setObjId] = useState('');
     const [roomCode, setRoomCode] = useState(localStorage.getItem('roomName'));
     const [winner, setWinner] = useState('');
     const [adminName, setAdminName] = useState(false);
@@ -277,13 +277,16 @@ export function BattleArena({ socket }) {
 
 
     return (
-        <div>
-            <h2>Room Code: {roomCode}</h2>
-            <button onClick={handleExit}>Leave Room</button>
+        <div className="flex flex-col items-center justify-center min-h-screen font-irish-grover text-white text-2xl">
+            <button className="absolute top-2 right-1 px-6 py-2 mb-4 sm:mb-0 sm:mr-1 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold" onClick={handleExit}>Leave Room</button>
+            <h2 className='mb-10 -mt-14'>Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
             <div className='flex flex-col justify-center items-center'>
                 {winner ? (
-                    <div>
-                        <h3>Leaderboard:</h3>
+                    <div className='flex flex-col justify-around align-middle '>
+                        <div>
+                        <h3 className='text-4xl'>Leaderboard</h3>
+                        </div>
+                        <div>
                         {Object.entries(winner).map(([key, value], index) => (
                             <div key={index}>
                                 <span>{index + 1}: </span>
@@ -291,27 +294,30 @@ export function BattleArena({ socket }) {
                                 <span>{value}</span>
                             </div>
                         ))}
+                        </div>
                         {adminName && <button onClick={handlePlayAgain}>Play Again</button>}
                     </div>
                 ) : (
-                    <div>
-                        <div className='p-4'>You have to draw a {objectName}</div>
-                        <canvas
-                            ref={canvasRef}
-                            id='canvas'
-                            className='border-2 border-black border-solid bg-white mb-5'
-                            style={{ height: "350px", width: "350px" }}
-                            height={100}
-                            width={100}></canvas>
-                        <div className='flex flex-col mb-5'>
-                            <div className='flex justify-end'>
-                                <button className='bg-white mr-10 p-1' onClick={handleClear}>
+                    <div className='flex items-center'>
+                        <div className='flex flex-col'>
+                            <div className='p-4'>You have to draw a <span className="text-4xl">{objectName}</span></div>
+                            <canvas
+                                ref={canvasRef}
+                                id='canvas'
+                                className='border-2 border-black border-solid bg-white mb-5 justify-self-center'
+                                style={{ height: "350px", width: "350px" }}
+                                height={100}
+                                width={100}></canvas>
+                            <div className='flex flex-col mb-5 items-center'>
+
+                                <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:bg-gray-200 transition-colors duration-300 font-bold" onClick={handleClear}>
                                     Clear
                                 </button>
                             </div>
                         </div>
-                        {result && <div>Score: {result}</div>}
-                        <div>Timer: {timer} seconds</div>
+                        <div className='ml-8 p-2'>
+                            <div className='p-1'>Timer: <span className='text-4xl p-1'>{timer}</span> seconds</div>
+                        </div>
                     </div>
                 )}
             </div>
