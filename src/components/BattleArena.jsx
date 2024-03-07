@@ -67,7 +67,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://0b9e-34-80-73-160.ngrok-free.app/predict', {
+            const req = await fetch('https://3526-34-80-73-160.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -276,7 +276,7 @@ export function BattleArena({ socket }) {
             <h2 className="mb-10">Room Code: <span className="animate-pulse text-4xl">{roomCode}</span></h2>
             <div className="flex flex-col justify-center items-center w-full md:flex-row md:items-start">
                 {winner ? (
-                    <div className="flex flex-col justify-around align-middle w-full md:w-auto">
+                    <div className="flex flex-col justify-around align-middle w-full md:w-auto p-2">
                         <div>
                             <h3 className="text-4xl">Leaderboard</h3>
                         </div>
