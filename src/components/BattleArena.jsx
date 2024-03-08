@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { LeaveRoomBtn } from './LeaveRoomBtn';
-const dotenv = require("dotenv");
-dotenv.config();
 
 const labels = ['airplane',
     'bicycle',
@@ -69,7 +67,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch(process.env.API_URL , {
+            const req = await fetch(import.meta.env.VITE_API_URL , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

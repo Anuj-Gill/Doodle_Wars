@@ -9,10 +9,9 @@ import { Wait } from './components/Wait';
 import { BattleArena } from './components/BattleArena';
 import { About } from './components/About';
 import socketIO from 'socket.io-client';
-const dotenv = require("dotenv");
-dotenv.config();
 
-const socket = socketIO.connect(process.env.BACKEND_URL);
+
+const socket = socketIO.connect(import.meta.env.VITE_BACKEND_URL);
 
 function App() {
   const [count, setCount] = useState(0)
