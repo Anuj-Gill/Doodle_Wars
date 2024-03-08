@@ -67,7 +67,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://3526-34-80-73-160.ngrok-free.app/predict', {
+            const req = await fetch('https://completely-native-quetzal.ngrok-free.app/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -300,6 +300,8 @@ export function BattleArena({ socket }) {
                                 id="canvas"
                                 className="border-2 border-black border-solid bg-white mb-5 justify-self-center"
                                 style={{ height: `350px`, width: `100%`, maxWidth: `350px` }}
+                                height={100}
+                                width={100}
                             ></canvas>
                             <div className="flex flex-col mb-5 items-center">
                                 <button
