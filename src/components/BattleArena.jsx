@@ -289,7 +289,7 @@ export function BattleArena({ socket }) {
                                 </div>
                             ))}
                         </div>
-                        {adminName && <button onClick={handlePlayAgain}>Play Again</button>}
+                        {adminName && <button className="px-6 py-2 mb-4 sm:mb-0 sm:mr-4 bg-white font-irish-grover text-blue-900 rounded-md hover:text-white hover:bg-blue-900 transition-colors duration-300 font-bold" onClick={handlePlayAgain}>Play Again</button>}
                     </div>
                 ) : (
                     <div className="flex flex-col-reverse items-center p-2 ">
