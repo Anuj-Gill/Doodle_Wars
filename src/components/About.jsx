@@ -9,8 +9,8 @@ export function About({ socket }) {
   return (
     <div className="flex flex-col items-center justify-around min-h-screen">
       <div className="">
-        <div className='flex flex-col justify-end items-center md:flex-row '>
-          <img src={logo} className='h-36 w-36 animate-spin-slow mr-10 rounded-full'></img>
+        <div className='flex flex-col items-center  md:flex-row '>
+          <img src={logo} className='h-36 w-36 animate-spin-slow md:mr-10 rounded-full '></img>
           <h1 className="text-6xl font-bold text-white sm:text-6xl md:text-8xl font-irish-grover">
             Doodle Wars
           </h1>
