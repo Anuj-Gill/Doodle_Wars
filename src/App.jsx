@@ -9,6 +9,7 @@ import { Wait } from './components/Wait';
 import { BattleArena } from './components/BattleArena';
 import { About } from './components/About';
 import socketIO from 'socket.io-client';
+const dotenv = require("dotenv");
 
 const socket = socketIO.connect("https://doodlewars-backend.onrender.com");
 
