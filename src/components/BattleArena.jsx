@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLoaderData, useNavigate } from 'react-router-dom';
 import { LeaveRoomBtn } from './LeaveRoomBtn';
+require('dotenv').config()
+
+const apiUrl = process.env.API_URL;
 
 const labels = ['airplane',
     'bicycle',
@@ -67,7 +70,7 @@ export function BattleArena({ socket }) {
         // const ctx = canvas.getContext('2d');
         // console.log(canvas.toDataURL());
         const handleFetch = async () => {
-            const req = await fetch('https://completely-native-quetzal.ngrok-free.app/predict', {
+            const req = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
