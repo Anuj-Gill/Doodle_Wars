@@ -12,6 +12,8 @@ module.exports = {
       animation: {
         'dots-shrink': 'spinners-react-dotted-shrin',
         'center-dot': 'spinners-react-dotted-center',
+        'spin-slow': 'spin 3s linear infinite',
+
       }
     },
   },

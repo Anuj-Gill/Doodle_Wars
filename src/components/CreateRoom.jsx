@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LeaveRoomBtn } from "./LeaveRoomBtn";
+import logo from '../assets/logo.jpeg';
 
 export function CreateRoom({ socket }) {
     const navigate = useNavigate();
@@ -35,9 +36,12 @@ export function CreateRoom({ socket }) {
 
     return (
         <div className="flex flex-col items-center justify-around  min-h-screen">
-            <LeaveRoomBtn socket={socket}/>
-            <div className="">
-                <h1 className="mt-10 text-6xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
+            <LeaveRoomBtn socket={socket} />
+            <div className='flex flex-col justify-end items-center md:flex-row '>
+                <img src={logo} className='h-36 w-36 animate-spin-slow mr-10 rounded-full'></img>
+                <h1 className="text-6xl font-bold text-white sm:text-6xl md:text-8xl font-irish-grover">
+                    Doodle Wars
+                </h1>
             </div>
             <form className="flex flex-col items-center -mt-10 " onSubmit={handleCreate}>
                 <input className="font-black font-irish-grover text-lg mb-3 border-solid border-2 border-black p-1 w-11/12 rounded-md placeholder-gray-400 " type="text" name="name" id="name" placeholder="Name" onChange={(e) => setName(e.target.value)} />

@@ -82,7 +82,7 @@ export function BattleArena({ socket }) {
             socket.emit('userScore', localStorage.getItem('userName'), localStorage.getItem('roomName'), localStorage.getItem('score'));
             setTimeout(() => {
                 socket.emit('getWinnerName', localStorage.getItem('roomName'));
-            }, 1000);
+            }, 100);
 
         };
         handleFetch();

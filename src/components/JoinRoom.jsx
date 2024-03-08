@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LeaveRoomBtn } from "./LeaveRoomBtn";
+import logo from '../assets/logo.jpeg';
 
 export function JoinRoom({ socket }) {
 
@@ -16,7 +17,7 @@ export function JoinRoom({ socket }) {
         if (name === '' || roomName === '') {
             setCreateStatus('Above fields can not be empty!');
         }
-        else if ( (lname === name && lrname === roomName) || (!localStorage.getItem('userName'))) {
+        else if ((lname === name && lrname === roomName) || (!localStorage.getItem('userName'))) {
             socket.emit('newUser', name, roomName);
             socket.on('newUserDeclined', (message) => {
                 setCreateStatus(message)
@@ -39,7 +40,7 @@ export function JoinRoom({ socket }) {
 
     function handleExit(e) {
         e.preventDefault();
-        socket.emit('userLeft',localStorage.getItem('userName'), localStorage.getItem('roomName'));
+        socket.emit('userLeft', localStorage.getItem('userName'), localStorage.getItem('roomName'));
         localStorage.removeItem('userName');
         localStorage.removeItem('roomName');
         localStorage.removeItem('score');
@@ -49,9 +50,12 @@ export function JoinRoom({ socket }) {
 
     return (
         <div className="flex flex-col items-center justify-around  min-h-screen">
-            <LeaveRoomBtn socket={socket}/>
-            <div className="">
-                <h1 className="mt-10 text-6xl font-bold font-irish-grover text-white  sm:text-6xl md:text-8xl">Doodle Wars</h1>
+            <LeaveRoomBtn socket={socket} />
+            <div className='flex flex-col justify-end items-center md:flex-row '>
+                <img src={logo} className='h-36 w-36 animate-spin-slow mr-10 rounded-full'></img>
+                <h1 className="text-6xl font-bold text-white sm:text-6xl md:text-8xl font-irish-grover">
+                    Doodle Wars
+                </h1>
             </div>
             <form className="flex flex-col items-center -mt-10 " onSubmit={handleJoin}>
                 <input className="font-black font-irish-grover text-lg mb-3 border-solid border-2 border-black p-1 w-11/12 rounded-md" type="text" name="name" id="name" placeholder="Name" onChange={(e) => setName(e.target.value)} />

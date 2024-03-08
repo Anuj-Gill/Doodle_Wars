@@ -25,7 +25,7 @@ export function Wait({ socket }) {
     return (
         <div className="flex flex-col items-center min-h-screen font-irish-grover text-white text-2xl">
             <LeaveRoomBtn socket={socket} />
-            <div className="flex flex-col mt-10">
+            <div className="flex flex-col mt-28 pl-6">
                 <div>Welcome <span className="animate-pulse text-4xl">{name}</span>. </div>
                 <span>Your Room Code is: <span className="animate-pulse text-4xl">{code}</span></span>
                 <div className="flex justify-start">
@@ -38,8 +38,8 @@ export function Wait({ socket }) {
                     </div>
                 </div>
             </div>
-            <div className="flex items-center mt-20">
-                <span className="ml-2 mr-4 text-4xl">Waiting for the host to start the game</span>
+            <div className="flex items-center mt-20 pr-6">
+                <span className="ml-2 mr-4 text-2xl">Waiting for the host to start the game</span>
                 <SpinnerDotted size={40} thickness={200} speed={117} color="rgba(255,255,255, 0.8)" />
             </div>
         </div>
