@@ -10,8 +10,9 @@ import { BattleArena } from './components/BattleArena';
 import { About } from './components/About';
 import socketIO from 'socket.io-client';
 const dotenv = require("dotenv");
+dotenv.config();
 
-const socket = socketIO.connect("https://doodlewars-backend.onrender.com");
+const socket = socketIO.connect(process.env.BACKEND_URL);
 
 function App() {
   const [count, setCount] = useState(0)
